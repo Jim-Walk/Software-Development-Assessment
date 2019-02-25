@@ -11,7 +11,7 @@ Try to make the following observations
 
 SCENARIO 2
 
-Ask the user to casually browse the website
+Ask the user to casually browse the website. Tell them to click on what interests them.
 
 Try to make the following observations
     - Do they seem fustrated at any time?
