@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Rank it{% endblock %}
+{% block content %}
+      <div class="starter-template">
+          <h1>{{inst.PROVIDER_NAME}}</h1>
+          <p class="lead">{{inst}}</p>
+        </p>
+        {% for c in courses %}
+        <a href="/course/{{c.KISCOURSEID}}">{{c.TITLE}}</a> </br>
+        {%endfor%}
+      </div>
+{% endblock %}
