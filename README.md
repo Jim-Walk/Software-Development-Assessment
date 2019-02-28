@@ -2,8 +2,8 @@
 Repo for the assessment for Software Development Course at the University of Edinburgh 2018
 
 ## Requirements
-* (https://docs.mongodb.com/manual/installation/#tutorials)[mongodb]
-* (https://www.python.org/downloads/)[python3]
+* [mongodb](https://docs.mongodb.com/manual/installation/#tutorials)
+* [python3](https://www.python.org/downloads/)
 
 For use with python3. Install necessary packages in either the website or the crawler folder with `pip install -r requirements.txt`
 
