@@ -1,8 +1,23 @@
 # Software-Development-Assessment
-Repo for Software Development course University of Edinburgh 2018
+Repo for the assessment for Software Development Course at the University of Edinburgh 2018
+
+## Requirements
+* (https://docs.mongodb.com/manual/installation/#tutorials)[mongodb]
+* (https://www.python.org/downloads/)[python3]
 
 For use with python3. Install necessary packages in either the website or the crawler folder with `pip install -r requirements.txt`
 
-run the server with `python3 manage.py runserver`
+## Quick Start
+
+After you've installed mongodb and you're sure it's up and running, simply import the data using the import script in the db folder.
+```
+python3 db/import.py
+```
+
+You can then run the server 
+```
+python3 website/routes.py
+```
+
 
 Visit the website at http://127.0.0.1:8000/rank
