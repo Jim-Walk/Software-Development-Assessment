@@ -88,6 +88,9 @@ local_settings.py
 .env
 db.sqlite3
 
+# Config holds API key so let's not upload it
+config.py
+
 # Latex
 *.log
 *.aux

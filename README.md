@@ -20,4 +20,4 @@ python3 website/routes.py
 ```
 
 
-Visit the website at http://127.0.0.1:8000/rank
+Visit the website at http://127.0.0.1:5000

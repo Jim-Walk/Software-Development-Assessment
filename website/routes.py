@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_pymongo import PyMongo
+from helpers import get_logo
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://127.0.0.1:27017/rankit"
 mongo = PyMongo(app)
@@ -17,8 +18,11 @@ def search():
 @app.route('/institution/<int:UKPRN>')
 def institution(UKPRN):
     inst = mongo.db.institutions.find_one({'UKPRN':UKPRN})
+    logo = get_logo(inst['PROVIDER_NAME'])
+    print(logo)
     courses = mongo.db.courses.find({'UKPRN':UKPRN})
-    return render_template('institution.html', inst=inst, courses=courses)
+    return render_template('institution.html', inst=inst, courses=courses,
+                           logo=logo)
 
 
 @app.route('/course/<KISCOURSEID>')
