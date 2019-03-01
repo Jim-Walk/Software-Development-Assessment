@@ -13,4 +13,3 @@ def get_logo(uni_title):
     r = requests.get(url+query)
     return r.json()['items'][0]['link']
 
-print(config.API_KEY)
