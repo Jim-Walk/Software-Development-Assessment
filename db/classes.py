@@ -14,7 +14,7 @@ class Database(object):
 		self.ImportInstitutions()
 		self.ImportCourses()
 		self.ImportLocations()
-		self/ImportNSS()
+		self.ImportNSS()
 		self.ImportSalary()
 
 	def ImportInstitutions(self):
@@ -127,3 +127,4 @@ class Course(object):
 	def GetByInstitution(self, ukprn):
 		query = {'UKPRN':ukprn}
 		return self.coursecol.find_one(query)
+
