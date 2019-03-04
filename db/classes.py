@@ -14,6 +14,8 @@ class Database(object):
 		self.ImportInstitutions()
 		self.ImportCourses()
 		self.ImportLocations()
+		self.ImportNSS()
+		self.ImportSalary()
 
 	def ImportInstitutions(self):
 		print('Importing Institutions...')
@@ -47,11 +49,55 @@ class Database(object):
 			ukprn = entry['UKPRN']
 			entry.pop('UKPRN')
 			self.institutions.update( {'UKPRN':ukprn}, { '$push': { 'locations': entry } }, upsert=True )
-		self.courses.create_index([('$**', 'text')])
+		self.institutions.create_index([('$**', 'text')])
 
 	def DropDB(self):
 		db.command('dropDatabase')
 		print('Database Dropped')
+
+	def ImportNSS(self):
+		df = pd.read_csv('./data/NSS.csv')
+		print('Importing NSS')
+		for index,row in df.iterrows():
+			if index%1000 == 0:
+					print(str(index)+' out of '+str(df.size) + ' NSS entries')
+			entry = row.to_dict()
+			kiscourseid = entry["KISCOURSEID"]
+			entry.pop('PUBUKPRN')
+			entry.pop('UKPRN')
+			entry.pop('KISCOURSEID')
+			entry.pop('KISMODE')
+			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'nss': entry} }, upsert=True )
+		self.courses.create_index([('$**', 'text')])
+		df = pd.read_csv('./data/NHSNSS.csv')
+		print('Importing NHSNSS')
+		for index,row in df.iterrows():
+			if index%1000 == 0:
+					print(str(index)+' out of '+str(df.size) + ' NHS NSS entries')
+			entry = row.to_dict()
+			kiscourseid = entry["KISCOURSEID"]
+			entry.pop('PUBUKPRN')
+			entry.pop('UKPRN')
+			entry.pop('KISCOURSEID')
+			entry.pop('KISMODE')
+			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'nss': entry} }, upsert=True )
+		self.courses.create_index([('$**', 'text')])
+
+
+	def ImportSalary(self):
+		df = pd.read_csv('./data/NSS.csv')
+		print('Importing Salary')
+		for index,row in df.iterrows():
+			if index%1000 == 0:
+					print(str(index)+' out of '+str(df.size) + ' locations')
+			entry = row.to_dict()
+			kiscourseid = entry["KISCOURSEID"]
+			entry.pop('PUBUKPRN')
+			entry.pop('UKPRN')
+			entry.pop('KISCOURSEID')
+			entry.pop('KISMODE')
+			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'salary': entry} }, upsert=True )
+		self.courses.create_index([('$**', 'text')])
 
 class Institution(object):
 	instcol = db.institutions
@@ -81,3 +127,4 @@ class Course(object):
 	def GetByInstitution(self, ukprn):
 		query = {'UKPRN':ukprn}
 		return self.coursecol.find_one(query)
+

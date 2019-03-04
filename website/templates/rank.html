@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}RankIt - ranks{% endblock %}
+{% block content %}
+      <div class="starter-template">
+        <h1>Ranks</h1>
+        <p class="lead"> Table will go here </p>
+        {% for course in courses %}
+            {{ course.TITLE }}
+        {% endfor %}
+      </div>
+        <table class="table table-striped">
+            <thead>
+                <th scope="col">Course Title</th>
+            </thead>
+            <tbody>
+            {% for course in courses %}
+                <tr>
+                    <td>{{course.PROVIDER_NAME}}</td><td><a href="/course/{{course.KISCOURSEID}}">{{course.TITLE}}</a></td>
+                </tr>
+            {%endfor%}
+            </tbody>
+        </table>
+{% endblock %}
