@@ -39,5 +39,10 @@ def unis():
     uni_list = mongo.db.institutions.find()
     return render_template('uni-list.html', uni_list = uni_list)
 
+@app.route('/rank/<STUDYLVL>&<REGION>&<DPRTMNT>/<int:GRD>&<int:EMPLOY>&<QOL>&<TEACH>')
+def rank(STUDYLVL, REGION, DPRTMNT, GRD, EMPLOY, QOL, TEACH):
+    return render_template('rank.html', studylvl=STUDYLVL, region=REGION,
+                           department=DPRTMNT, gradrate=GRD, employ=EMPLOY,
+                           qol=QOL, teach=TEACH)
 if __name__ == '__main__':
 	app.run()
