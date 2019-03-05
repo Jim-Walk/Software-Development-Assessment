@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from flask_pymongo import PyMongo
-from helpers import get_logo
+from helpers import get_logo, get_wiki
 from copy import deepcopy
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://127.0.0.1:27017/rankit"
@@ -21,10 +21,10 @@ def institution(UKPRN):
     inst = mongo.db.institutions.find_one({'UKPRN':UKPRN})
     #logo = get_logo(inst['PROVIDER_NAME'])
     logo = "/static/images/uoe_logo.png"
-    print(logo)
+    wiki = get_wiki(inst['PROVIDER_NAME'])
     courses = mongo.db.courses.find({'UKPRN':UKPRN})
     return render_template('institution.html', inst=inst, courses=courses,
-                           logo=logo)
+                           logo=logo, wiki=wiki)
 
 
 @app.route('/course/<KISCOURSEID>')

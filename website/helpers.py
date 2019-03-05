@@ -1,5 +1,7 @@
 import requests
 import config
+import wikipediaapi
+from titlecase import titlecase
 
 # Takes as input a univerity's title field, returns 
 # the logo of that university through a google API query.
@@ -12,3 +14,11 @@ def get_logo(uni_title):
     r = requests.get(url+query)
     return r.json()['items'][0]['link']
 
+
+def get_wiki(uni_title):
+    wiki_wiki = wikipediaapi.Wikipedia('en')
+    page = wiki_wiki.page(titlecase(uni_title))
+    if page.exists:
+        return {'url': page.fullurl, 'summary': page.summary[0:1000]}
+    else:
+        return {'summary': "Unable to find wikipedia page :("}
