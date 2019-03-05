@@ -5,13 +5,13 @@
         <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
         <div class="container">
-            <div class="row">
+            <div class="row bg-primary">
               <div class="col-md text-center">
                 <p style="font-family: Open sans-serif; font-size: 35px; font-weight: bold">{{inst.PROVIDER_NAME}}</p>
               </div>
             </div>
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-6 bg-success">
                 <p style="font-family:sans-serif; font-size: 20px"><br>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
                   Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
                   when an unknown printer took a galley of type and scrambled it to make a type specimen book.
@@ -21,31 +21,31 @@
                   and more recently with desktop publishing software like Aldus PageMaker 
                   including versions of Lorem Ipsum.</p>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 bg-danger">
                 <img src={{logo}} height="300" width="300" class='img-responsive center-block' />
               </div> 
             </div>
-            <div class="row">
+            <div class="row bg-info">
               <div class="col-md-8">
                 <h3>Departments</h3>
               </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 bg-warning">
                     <ul>
                     {% for c in range(5) %}
                       <li><a style="font-family:sans-serif; font-size: 20px" href="/course/{{courses[c].KISCOURSEID}}">{{courses[c].TITLE}}</a></li>
                     {%endfor%}
                     </ul>
                 </div> 
-                <div class="col-md-6">
+                <div class="col-md-6 bg-danger">
                       <div class="row">
-                        <div class="col-md-6 text-right" ><label>Graduation rates 76%</label></div>
-                        <div class="col-md-6 text-left"><label>Employment chances 85%</label></div>
+                        <div class="col-md-6 bg-primary text-right" ><label>Graduation rates 76%</label></div>
+                        <div class="col-md-6 bg-success text-left"><label>Employment chances 85%</label></div>
                       </div>
                       <div class="row">
-                        <div class="col-md-6 text-right"><label>Quality of life measures 72%</label></div>
-                        <div class="col-md-6 text-left"><label>Teaching excellence 70%</label></div>
+                        <div class="col-md-6 bg-info text-right"><label>Quality of life measures 72%</label></div>
+                        <div class="col-md-6 bg-warning text-left"><label>Teaching excellence 70%</label></div>
                       </div>      
                 </div> 
             </div>  
