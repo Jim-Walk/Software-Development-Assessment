@@ -16,9 +16,18 @@ def get_logo(uni_title):
 
 
 def get_wiki(uni_title):
-    wiki_wiki = wikipediaapi.Wikipedia('en')
-    page = wiki_wiki.page(titlecase(uni_title))
+    wiki = wikipediaapi.Wikipedia('en')
+    page = wiki.page(titlecase(uni_title))
     if page.exists:
         return {'url': page.fullurl, 'summary': page.summary[0:1000]}
     else:
         return {'summary': "Unable to find wikipedia page :("}
+
+# Takes a list of course and uni dicts, sorts them 
+# according to weight factors
+def rank_it(c_list, salary, teach):
+    if teach > salary:
+        return sorted(c_list, key=lambda k: k['nss'][0]['Q27'])
+    else:
+        return sorted(c_list, key=lambda k: k['salary'][0]['MED'])
+

@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request
 from flask_pymongo import PyMongo
-from helpers import get_logo, get_wiki
+from helpers import get_logo, get_wiki, rank_it
 from copy import deepcopy
+import math
+
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://127.0.0.1:27017/rankit"
 mongo = PyMongo(app)
@@ -42,22 +44,36 @@ def unis():
     return render_template('uni-list.html', uni_list = uni_list)
 
 @app.route('/rank', methods=['GET'])
-def rankNew():
+def rank():
     if request.method == 'GET':
+        # First, retrieve form options
         department = request.args['department'].replace('+', ' ')
+        salary = int(request.args['salary'])
+        teach = int(request.args['teaching'])
+        qol = request.args['qol']               # qol - Quality of Life
+        employ = request.args['employ']         # employability
+
+        # compile list of courses with no missing data
+        courses = mongo.db.courses.find({"$text": {"$search": department}},
+                                        limit=50)
         course_and_uni =[]
-        courses = mongo.db.courses.find({"$text": {"$search": department}}, limit=10)
+        c_list = []
+        # get courses out of the pymongo cursor
         for course in courses:
-            course_and_uni += [course] #.update(uni)]
+            if not math.isnan(course['salary'][0]['MED']):
+                if not math.isnan(course['nss'][0]['Q27']):
+                    c_list += [course]
 
-        for course in course_and_uni:
+        for course in c_list:
             uni = mongo.db.institutions.find_one({'UKPRN':course['UKPRN']})
-            course.update(uni)
-        print(courses.rewind()[0])
+            if 'PROVIDER_NAME' in uni:
+                course.update(uni)
+                course_and_uni += [course]
 
-        for course in course_and_uni:
-            print(course['TITLE'], ': ', course['PROVIDER_NAME'])
-    return render_template('rank.html', courses=course_and_uni)
+        # rank list of courses
+        c_final = rank_it(course_and_uni, salary, teach)
+
+    return render_template('rank.html', courses=c_final)
 
 if __name__ == '__main__':
 	app.run()
