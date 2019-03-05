@@ -94,3 +94,6 @@ config.py
 # Latex
 *.log
 *.aux
+
+# vim
+*.swp

@@ -5,4 +5,24 @@
         <h1>RankIt</h1>
         <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
       </div>
+     <form action="/rank?" method="get">
+        <div class="form-group">
+            <div class="input-group">
+            <label for="studyLevelSelect">Study Level</label>
+            <select name="study" class="form-control" id="studyLevelSelect">
+                <option>Undergraduate</option>
+                <option>Postgraduate</option>
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="text" name="department" placeholder="Course">
+            <input type="number" name="salary" placeholder="salary" min="0"
+            max="100" value="25">
+            <input type="number" name="teaching" placeholder="Quality of Teaching" min="0" max="100">
+            <input type="number" name="qol" placeholder="Quality of Life" min="0" max="100">
+            <input type="number" name="employ" placeholder="Employment Chances" min="0" max="100">
+        </div>
+        <input type="submit" class="btn btn-primary" value="Submit">
+     </form>
 {% endblock %}
