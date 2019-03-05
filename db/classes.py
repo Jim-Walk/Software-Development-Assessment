@@ -11,10 +11,10 @@ class Database(object):
 	courses = db.courses
 
 	def Bootstrap(self):
-	#	self.ImportInstitutions()
-	#	self.ImportCourses()
-	#	self.ImportLocations()
-	#	self.ImportNSS()
+		self.ImportInstitutions()
+		self.ImportCourses()
+		self.ImportLocations()
+		self.ImportNSS()
 		self.ImportSalary()
 
 	def ImportInstitutions(self):
