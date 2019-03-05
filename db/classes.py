@@ -11,10 +11,10 @@ class Database(object):
 	courses = db.courses
 
 	def Bootstrap(self):
-		self.ImportInstitutions()
-		self.ImportCourses()
-		self.ImportLocations()
-		self.ImportNSS()
+	#	self.ImportInstitutions()
+	#	self.ImportCourses()
+	#	self.ImportLocations()
+	#	self.ImportNSS()
 		self.ImportSalary()
 
 	def ImportInstitutions(self):
@@ -85,11 +85,11 @@ class Database(object):
 
 
 	def ImportSalary(self):
-		df = pd.read_csv('./data/NSS.csv')
+		df = pd.read_csv('./data/SALARY.csv')
 		print('Importing Salary')
 		for index,row in df.iterrows():
 			if index%1000 == 0:
-					print(str(index)+' out of '+str(df.size) + ' locations')
+					print(str(index)+' out of '+str(df.size) + ' salaries')
 			entry = row.to_dict()
 			kiscourseid = entry["KISCOURSEID"]
 			entry.pop('PUBUKPRN')
