@@ -14,10 +14,11 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
-
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static',filename='css/starter-template.css') }}" rel="stylesheet">
 
+    <link href="{{ url_for('static',filename='css/base.css') }}" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -35,7 +36,7 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-             <li> <a href="#">
+             <li> <a href="/">
           <span class="glyphicon glyphicon-home" style="font-size:24px;color:grey"></span> </a>  </li>  
           <li><span class="navbar-text" style="font-size:20px;margin: 16
           px;">Rank it</span>
@@ -68,4 +69,25 @@
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
   </body>
+
+   <footer  class="footer navbar-fixed-bottom " style="background-color: : #bdbdbd;">
+      {% block footer %}
+      <span style="color: black"><a href="http://domain.invalid/">Terms of use</a></span>
+      <span style="color: black"><a href="http://domain.invalid/">About us</a></span>
+      <span style="color: black"><a href="http://domain.invalid/">Cookies</a></span>
+      <span style="color: black"><a href="http://domain.invalid/">Privacy</a></span>
+
+  
+    <section id="lab_social_icon_footer">
+     <div class="container">
+        <div class="text-center center-block">
+                <a href="https://www.facebook.com/bootsnipp"><i id="social-fb" class="fa fa-facebook-square fa-3x social"></i></a>
+              <a href="https://twitter.com/bootsnipp"><i id="social-tw" class="fa fa-twitter-square fa-3x social"></i></a>
+              <a href="https://plus.google.com/+Bootsnipp-page"><i id="social-gp" class="fa fa-google-plus-square fa-3x social"></i></a>
+              <a href="mailto:#"><i id="social-em" class="fa fa-envelope-square fa-3x social"></i></a>
+    </div>
+</div>
+</section>
+    {% endblock %}
+    </footer>
 </html>

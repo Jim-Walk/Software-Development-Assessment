@@ -22,19 +22,16 @@ def search():
 def institution(UKPRN):
     inst = mongo.db.institutions.find_one({'UKPRN':UKPRN})
     logo = get_logo(inst['PROVIDER_NAME'])
-    #logo = "/static/images/uoe_logo.png" in case you exceed the limit
-    print(logo)
+    #logo = "/static/images/uoe_logo.png" #in case you exceed the limit
     wiki = get_wiki(inst['PROVIDER_NAME'])
-
     courses = mongo.db.courses.find({'UKPRN':UKPRN})
     return render_template('institution.html', inst=inst, courses=courses,
                            logo=logo, wiki=wiki)
 
-
-@app.route('/course/<KISCOURSEID>')
-def course(KISCOURSEID):
+@app.route('/course/<PROVIDER_NAME>/<KISCOURSEID>')
+def course(PROVIDER_NAME, KISCOURSEID):
     course = mongo.db.courses.find_one({'KISCOURSEID':KISCOURSEID})
-    return render_template('course.html', course=course)
+    return render_template('course.html', course=course, university_name = PROVIDER_NAME)
 
 @app.route('/about')
 def about():
