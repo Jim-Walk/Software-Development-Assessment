@@ -27,7 +27,7 @@ def get_wiki(uni_title):
 # according to weight factors
 def rank_it(c_list, salary, teach):
     if teach > salary:
-        return sorted(c_list, key=lambda k: k['nss'][0]['Q27'])
+        return sorted(c_list, key=lambda k: k['nss'][0]['Q27'], reverse=True)
     else:
-        return sorted(c_list, key=lambda k: k['salary'][0]['MED'])
+        return sorted(c_list, key=lambda k: k['salary'][0]['MED'], reverse=True)
 

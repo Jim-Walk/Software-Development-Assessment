@@ -54,7 +54,7 @@ def rank():
 
         # compile list of courses with no missing data
         courses = mongo.db.courses.find({"$text": {"$search": department}},
-                                        limit=50)
+                                        limit=300)
         course_and_uni =[]
         c_list = []
         # get courses out of the pymongo cursor
