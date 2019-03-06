@@ -69,18 +69,30 @@
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
   </body>
 
-  <footer  class="footer navbar-fixed-bottom " style="background-color: : #bdbdbd;">
-      {% block footer %}
-      <span style="color: black"><a href="http://domain.invalid/">Terms of use</a></span>
-      <span style="color: black"><a href="http://domain.invalid/">About us</a></span>
-      <span style="color: black"><a href="http://domain.invalid/">Cookies</a></span>
-      <span style="color: black"><a href="http://domain.invalid/">Privacy</a></span>
 
+  <style>
+.red {
+  font-size: 50px;
+  color:  #bdbdbd;
+}
+
+
+</style>
+
+
+<footer>
+      {% block footer %}
+     <ul class="foote_bottom_ul_amrc">
+<li><a href="http://webenlance.com">Terms of use</a></li>
+<li><a href="http://webenlance.com">About us</a></li>
+<li><a href="http://webenlance.com">Cookies</a></li>
+<li><a href="http://webenlance.com">Privacy</a></li>
+</ul>
   
-    <section id="lab_social_icon_footer">
+    <section >
      <div class="container">
-        <div class="text-center center-block">
-                <a href="https://www.facebook.com/bootsnipp"><i id="social-fb" class="fa fa-facebook-square fa-3x social"></i></a>
+        <div class="social_footer_ul">
+                <a href="https://www.facebook.com/bootsnipp"><i id="social-fb" class="fa fa-facebook-square fa-3x social grey"></i></a>
               <a href="https://twitter.com/bootsnipp"><i id="social-tw" class="fa fa-twitter-square fa-3x social"></i></a>
               <a href="https://plus.google.com/+Bootsnipp-page"><i id="social-gp" class="fa fa-google-plus-square fa-3x social"></i></a>
               <a href="mailto:#"><i id="social-em" class="fa fa-envelope-square fa-3x social"></i></a>
@@ -88,5 +100,5 @@
 </div>
 </section>
     {% endblock %}
-  </footer>
+    </footer>
 </html>
