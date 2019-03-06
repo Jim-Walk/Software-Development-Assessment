@@ -1,37 +1,49 @@
 {% extends "base.html" %}
 {% block title %}Rank it{% endblock %}
 {% block content %}
+      <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+      <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
+      
       <div class="starter-template">
         <h1>Rank it!</h1>
         <p class="lead">A research tool for prospective university students</p>
       </div>
+      <div class="container bg-warning">
      <form action="/rank?" method="get">
         <div class="form-group">
             <div class="input-group" >
-            <label for="studyLevelSelect">Study Level</label>
-            <select name="study" class="form-control" id="studyLevelSelect">
-                <option>Undergraduate</option>
-                <option>Postgraduate</option>
-            </select>
-            <label for="regionSelect">Region</label>
-            <select name="region" class="form-control" id="regionSelect">
-                <option>Worldwide</option>
-                <option>UK</option>
-            </select>
-            <label for="departmentSelect">Department</label>
-            <select name="deparment" class="form-control" id="departmentSelect">
-                <option>All departments</option>
-                <option>Computer Science</option>
-            </select>
-            <label for="yearSelect">Year</label>
-            <select name="year" class="form-control" id="yearSelect">
-                <option>2018</option>
-                <option>2017</option>
-            </select>
+              <div class="row bg-danger">
+                <div class="col-md-3">
+                    <label for="studyLevelSelect">Study Level</label>
+                    <select name="study" class="form-control" id="studyLevelSelect">
+                        <option>Undergraduate</option>
+                        <option>Postgraduate</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="regionSelect">Region</label>
+                    <select name="region" class="form-control" id="regionSelect">
+                        <option>Worldwide</option>
+                        <option>UK</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="departmentSelect">Department</label>
+                    <select name="deparment" class="form-control" id="departmentSelect">
+                        <option>All departments</option>
+                        <option>Computer Science</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="yearSelect">Year</label>
+                    <select name="year" class="form-control" id="yearSelect">
+                        <option>2018</option>
+                        <option>2017</option>
+                    </select>
+                </div>
+              </div>
             </div>
         </div>
-
-
 
         <div class="form-group-text">
             <div id="val1" style="vertical-align:text-bottom; display:inline">Graduation rates</div>
@@ -40,27 +52,27 @@
             <div id="val3" style="vertical-align:text-bottom; display:inline">Teaching excellence</div>
          </div>
          <div class="form-group">
-<div class="slidecontainer"  style="width:180px; height:auto; float:left;magin:50px;display:inline ">
-  <input type="range" min="1" max="100" value="50" class="slider" id="myRange1">
-  <span id="sliderval1"></span>
-</div>
+            <div class="slidecontainer"  style="width:180px; height:auto; float:left;magin:50px;display:inline ">
+              <input type="range" min="1" max="100" value="50" class="slider" id="myRange1">
+              <span id="sliderval1"></span>
+            </div>
 
-<div class="slidecontainer"  style="width:180px; height:auto; float:left;magin:50px; display:inline">
-  <input type="range" min="1" max="100" value="50" class="slider" id="myRange2">
-  <span id="sliderval2"></span>
-</div>
+            <div class="slidecontainer"  style="width:180px; height:auto; float:left;magin:50px; display:inline">
+              <input type="range" min="1" max="100" value="50" class="slider" id="myRange2">
+              <span id="sliderval2"></span>
+            </div>
 
-<div class="slidecontainer"  style="width:180px; height:auto;float:left; display:inline">
-  <input type="range" min="1" max="100" value="50" class="slider" id="myRange3">
-  <span id="sliderval3"></span>
-</div>
+            <div class="slidecontainer"  style="width:180px; height:auto;float:left; display:inline">
+              <input type="range" min="1" max="100" value="50" class="slider" id="myRange3">
+              <span id="sliderval3"></span>
+            </div>
 
 
-<div class="slidecontainer"  style="width:180px; height:auto;float:left;display:inline">
-  <input type="range" min="1" max="100" value="50" class="slider" id="myRange4">
-  <span id="sliderval4"></span>
-</div>
-</div>
+            <div class="slidecontainer"  style="width:180px; height:auto;float:left;display:inline">
+              <input type="range" min="1" max="100" value="50" class="slider" id="myRange4">
+              <span id="sliderval4"></span>
+            </div>
+        </div>
 <script>
 var slider1 = document.getElementById("myRange1");
 var output1 = document.getElementById("sliderval1");
@@ -97,5 +109,6 @@ slider4.oninput = function() {
      </div>
        
      </form>
+     </div>
     
 {% endblock %}

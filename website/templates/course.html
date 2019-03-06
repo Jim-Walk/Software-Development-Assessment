@@ -4,10 +4,22 @@
 {% endblock %}
 {% block content %}
 
+      <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+      <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
+
+      <div class="container" style="padding:10px">
+          <div class='row sd_navigation'>
+            <a href="/" class="sd_navigation_item" style="color:#333333"><u>Home</u></a>
+            <img class="sd_navigation_item" src="/static/images/next1.png" disabled/>
+            <a href="/" class="sd_navigation_item" style="color:#333333"><u>University profile</u></a>
+            <img class="sd_navigation_item" src="/static/images/next1.png" disabled/>
+            <label class="sd_navigation_item">Program profile</label>
+          </div>
+      </div>
+
       <div class="starter-template">
-        <h1 id="uni_name" style="text-align: center"> University of XXX </h1>
-          <h1>{{course.TITLE}}</h1>
-          <p class="lead">{{course}}</p>
+        <h1 id="uni_name" style="text-align: center"> {{university_name}} </h1>
+        <h1>{{course.TITLE}}</h1>
         </p>
       </div>
 
@@ -19,7 +31,8 @@
         </h3>
     </div>
     <div class="panel-body" id="pro_dscri">
-        Here is the programme description
+        Here is the programme description NEEDED FROM DATABASE
+        <p class="lead">{{course}}</p>
     </div>
    </div>
 
@@ -31,7 +44,7 @@
         </h3>
     </div>
     <div class="panel-body" id="pro_dscri">
-        Here is the programme link
+        <a href="{{course.LTURL}}">{{course.LTURL}}</a>
     </div>
    </div>
 
@@ -41,29 +54,28 @@
             Useful information
         </h3>
     </div>
-    <div class="panel-body" id="pro_dscri">
-        Here is the table
+    <div class="panel-body" id="pro_dscri">        
+      <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col" style="width:25%">Programme start date</th>
+              <th scope="col" style="width:25%">Application deadline</th>
+              <th scope="col" style="width:25%">Study modes</th>
+              <th scope="col" style="width:25%">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="infor_sta_date">date</td>
+              <td id="infor_deadline">deadline</td>
+              <td id="infor_mode">modes</td>
+              <td id="infor_duration">duration</td>
+            </tr>
+          </tbody>
+        </table>
     </div>
    </div>
 
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th scope="col" style="width:25%">Programme start date</th>
-      <th scope="col" style="width:25%">Application deadline</th>
-      <th scope="col" style="width:25%">Study modes</th>
-      <th scope="col" style="width:25%">Duration</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td id="infor_sta_date">date</td>
-      <td id="infor_deadline">deadline</td>
-      <td id="infor_mode">modes</td>
-      <td id="infor_duration">duration</td>
-    </tr>
-  </tbody>
-</table>
 
 {% endblock %}

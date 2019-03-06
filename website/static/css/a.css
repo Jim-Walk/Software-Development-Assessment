@@ -11,8 +11,15 @@
   h3 {
     font-family:sans-serif;    
   }
-.sd_path{
+.sd_navigation{
   padding: 10px;
+  font-size: 15px; 
+}
+.sd_navigation_item{
+  padding-right: 5px;
+}
+img.sd_navigation_item{
+  width: 15px;
 }
 .equal {
   display: flex;

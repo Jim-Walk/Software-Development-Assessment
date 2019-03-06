@@ -5,8 +5,10 @@
         <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
         <div class="container" style="padding:10px">
-            <div class='row sd_path'>
-              <a href="/">Home</a><label>Institution profile</label>
+            <div class='row sd_navigation'>
+              <a href="/" class="sd_navigation_item" style="color:#333333"><u>Home</u></a>
+              <img class="sd_navigation_item" src="/static/images/next1.png" disabled/>
+              <label class="sd_navigation_item">University profile</label>
             </div>
             <div class="row">
               <div class="col-md text-center">
@@ -15,7 +17,7 @@
             </div>
             <div class="row imageCenterAlign topAlign">
               <div class="col-md-6 equal center-block image-center">
-                <p style="font-family:sans-serif; font-size: 20px"><br>{{wiki.summary}}<a href={{wiki.url}}>...</a></p>
+                <p style="font-family:sans-serif; font-size: 18px"><br>{{wiki.summary}}<a href={{wiki.url}}> ...</a></p>
                 </initrd.imgv>
               </div>
               <div class="col-md-6 equal">
@@ -24,14 +26,14 @@
             </div>
             <div class="row">
               <div class="col-md-8">
-                <h3>Departments</h3>
+                <h3>Programs</h3>
               </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <ul>
-                    {% for c in range(5) %}
-                      <li><a style="font-family:sans-serif; font-size: 20px" href="/course/{{courses[c].KISCOURSEID}}">{{courses[c].TITLE}}</a></li>
+                    <ul style="padding-right:-20px">
+                    {% for c in range(7) %}
+                      <li><a style="font-family:sans-serif; font-size: 20px" href="/course/{{inst.PROVIDER_NAME}}/{{courses[c].KISCOURSEID}}">{{courses[c].TITLE}}</a></li>
                     {%endfor%}
                     </ul>
                 </div> 
