@@ -19,7 +19,6 @@
     <link href="{{ url_for('static',filename='css/starter-template.css') }}" rel="stylesheet">
 
     <link href="{{ url_for('static',filename='css/base.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static',filename='js/jquery-3.3.1.js') }}"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -46,7 +45,7 @@
           </ul>
            <form class="navbar-form navbar-right">
         <div class="form-group input-group" style="margin: 3px;"">
-            <input type="text" class="form-control" id="searchbar" placeholder="">
+            <input type="text" class="form-control" id="searchbar" placeholder="University/department,etc">
             <span class="input-group-btn"><a class="btn btn-default"><span
                     class="glyphicon glyphicon-search"></span>Search</a></span>
         </div>
@@ -66,31 +65,51 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+
   </body>
 
 
+<!-- Footer -->
+<footer class="page-footer font-small bg-secondary text-white pt-4" ">
 
+    <!-- Footer Elements -->
+    <div class="container">
 
-<footer>
-      {% block footer %}
-     <ul class="foote_bottom_ul_amrc">
-<li><a href="http://webenlance.com">Terms of use</a></li>
-<li><a href="http://webenlance.com">About us</a></li>
-<li><a href="http://webenlance.com">Cookies</a></li>
-<li><a href="http://webenlance.com">Privacy</a></li>
-</ul>
-  
-    <section >
+      <!-- Call to action -->
+      <ul class="list-unstyled list-inline py-2">
+        <li class="list-inline-item">
+         <a href="http://webenlance.com">Terms of use</a>
+        </li>
+        <li class="list-inline-item">
+          <a href="http://webenlance.com">About us</a></a>
+        </li>
+        <li><a href="http://webenlance.com">Cookies</a></li>
+        <li><a href="http://webenlance.com">Privacy</a></li>
+      </ul>
+      <!-- Call to action -->
+
+    </div>
+    <!-- Footer Elements -->
+
+    <!-- Copyright -->
+   <section id="lab_social_icon_footer">
      <div class="container">
-        <div class="social_footer_ul">
-                <a href="https://www.facebook.com/bootsnipp"><i id="social-fb" class="fa fa-facebook-square fa-3x social grey"></i></a>
+        <div class="text-center center-block">
+                <a href="https://www.facebook.com/bootsnipp"><i id="social-fb" class="fa fa-facebook-square fa-3x social"></i></a>
               <a href="https://twitter.com/bootsnipp"><i id="social-tw" class="fa fa-twitter-square fa-3x social"></i></a>
               <a href="https://plus.google.com/+Bootsnipp-page"><i id="social-gp" class="fa fa-google-plus-square fa-3x social"></i></a>
               <a href="mailto:#"><i id="social-em" class="fa fa-envelope-square fa-3x social"></i></a>
     </div>
 </div>
 </section>
-    {% endblock %}
-    </footer>
+    <!-- Copyright -->
+
+  </footer>
+  <!-- Footer -->
+
+   
+ 
 </html>
