@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, json
 from flask_pymongo import PyMongo
 from helpers import get_logo, get_wiki, rank_it
 from copy import deepcopy
 import math
+from bson.json_util import dumps
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://127.0.0.1:27017/rankit"
@@ -12,6 +13,16 @@ mongo = PyMongo(app)
 def main():
     return render_template('index.html')
 
+@app.route('/test', methods=['POST'])
+def test():
+    list_uni = mongo.db.institutions.find()
+    #indata = request.form #incoming data
+    outdata = dumps(list_uni)
+    response = app.response_class(
+        response=json.dumps(outdata),
+        mimetype='application/json'
+    )
+    return response
 
 @app.route('/search', methods=['GET'])
 def search():
