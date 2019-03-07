@@ -18,10 +18,11 @@ def get_logo(uni_title):
 def get_wiki(uni_title):
     wiki = wikipediaapi.Wikipedia('en')
     page = wiki.page(titlecase(uni_title))
-    if page.exists:
+    if page.exists():
+        print('we get here')
         return {'url': page.fullurl, 'summary': page.summary[0:1000]}
     else:
-        return {'summary': "Unable to find wikipedia page :("}
+        return {'summary': "Unable to find wikipedia page "}
 
 # Takes a list of course and uni dicts, sorts them 
 # according to weight factors
