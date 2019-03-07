@@ -15,7 +15,7 @@ def main():
 
 @app.route('/search', methods=['GET'])
 def search():
-    return 'Search Results Page'
+    return render_template('search_result.html')
 
 
 @app.route('/institution/<int:UKPRN>')

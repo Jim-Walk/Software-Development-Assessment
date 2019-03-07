@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Rank it
+
+{% endblock %}
+{% block content %}
+
+ <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+ <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
+
+<h1>Search result</h1>
+<hr>
+<div>
+<ul id="results"> 
+  <li><a href="www.ed.ac.uk">University of Edinburgh</a></li>
+  <li><a href="www.ed.ac.uk">University of Edinburgh</a></li>
+  <li><a href="www.ed.ac.uk">University of Edinburgh</a></li>
+  <li><a href="www.ed.ac.uk">University of Edinburgh</a></li>
+ </ul>
+</div>
+
+
+
+{% endblock %}
