@@ -41,8 +41,19 @@ def institution(UKPRN):
 
 @app.route('/course/<PROVIDER_NAME>/<KISCOURSEID>')
 def course(PROVIDER_NAME, KISCOURSEID):
+    date = 'September, 2019'
+    deadline = '10 May 2019'
+    modes = 'Full time'
+    duration = '4 years'
     course = mongo.db.courses.find_one({'KISCOURSEID':KISCOURSEID})
-    return render_template('course.html', course=course, university_name = PROVIDER_NAME)
+    return render_template('course.html', 
+                            course=course, 
+                            university_name = PROVIDER_NAME, 
+                            date=date,
+                            deadline = deadline,
+                            modes = modes,
+                            duration = duration
+                           )
 
 @app.route('/about')
 def about():
@@ -53,8 +64,9 @@ def unis():
     uni_list = mongo.db.institutions.find()
     return render_template('uni-list.html', uni_list = uni_list)
 
-@app.route('/rank', methods=['GET'])
+@app.route('/rank', methods=['GET', 'POST'])
 def rank():
+    '''
     if request.method == 'GET':
         # First, retrieve form options
         department = request.args['department'].replace('+', ' ')
@@ -82,8 +94,37 @@ def rank():
 
         # rank list of courses
         c_final = rank_it(course_and_uni, salary, teach)
-
     return render_template('rank.html', courses=c_final)
+    else:
+    '''    
+    # First, retrieve form options
+    course_name = request.form['course'].replace('+', ' ')
+    salary = int(request.form['salary'])
+    teach = int(request.form['teaching'])
+
+    # compile list of courses with no missing data
+    courses = mongo.db.courses.find({"$text": {"$search": course_name}},
+                                    limit=50)
+    course_and_uni =[]
+    c_list = []
+    # get courses out of the pymongo cursor
+    for course in courses:
+        if not math.isnan(course['salary'][0]['MED']):
+            if not math.isnan(course['nss'][0]['Q27']):
+                c_list += [course]
+    for course in c_list:
+        uni = mongo.db.institutions.find_one({'UKPRN':course['UKPRN']})
+        if 'PROVIDER_NAME' in uni:
+            course.update(uni)
+            course_and_uni += [course]
+    # rank list of courses
+    c_final = rank_it(course_and_uni, salary, teach)
+    outdata = dumps(c_final)
+    response = app.response_class(
+        response=json.dumps(outdata),
+        mimetype='application/json'
+    )
+    return response
 
 if __name__ == '__main__':
 	app.run()
