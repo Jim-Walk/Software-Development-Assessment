@@ -22,7 +22,9 @@
         <h2> Courses </h2>
         <ul>
             {% for course in courses %}
-                <li> {{ course.TITLE }} </li>
+            <li> <a href="/course/{{ course.PROVIDER_NAME
+            }}/{{course.KISCOURSEID}}">{{ course.TITLE }}</a> - <a
+                    href="/institution/{{course.UKPRN}}">{{course.PROVIDER_NAME}}</a></li>
             {% endfor %}
         </ul>
     {% endif %}

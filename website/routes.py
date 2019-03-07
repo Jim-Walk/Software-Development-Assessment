@@ -34,11 +34,16 @@ def search():
                                         limit=10)
         uni_list = []
         course_list = []
+
+        # extract values from mongo cursor before we can use them
         for uni in unis:
             uni_list += [uni]
 
         for course in courses:
             course_list += [course]
+        for course in course_list:
+            uni = mongo.db.institutions.find_one({'UKPRN': course['UKPRN']})
+            course.update(uni)
 
     return render_template('search_result.html', courses=course_list,
                            unis=uni_list)
