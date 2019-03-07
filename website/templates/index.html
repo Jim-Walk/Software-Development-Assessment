@@ -17,7 +17,7 @@
   <p class="lead">A research tool for prospective university students</p>
 </div>
 
-<form action="" class="container ">
+<form id="rank-form" action="" class="container ">
   <div class="row">
       <div class="form-group col-md-3">
           <label for="studyLevelSelect">Study Level</label>
@@ -152,7 +152,7 @@
       return html;  
     }
     $(function () {
-        $('form').submit('click', function (event) {
+        $("#rank-form").submit('click', function (event) {
             formdata = $('form').serialize();
             event.preventDefault();// using this page stop being refreshing 
             $.ajax({
