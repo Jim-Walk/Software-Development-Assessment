@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Rank it{% endblock %}
+{% block content %}
+      <div class="starter-template">
+        <h1>List of Universities</h1>
+        <p class="lead">{%for i in uni_list %}
+        <a href="/institution/{{i.UKPRN}}">{{i.PROVIDER_NAME}}</a></br>
+        {%endfor%}
+        </p>
+      </div>
+{% endblock %}

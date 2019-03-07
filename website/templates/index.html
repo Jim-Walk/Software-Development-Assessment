@@ -1,169 +1,187 @@
 {% extends "base.html" %}
 {% block title %}Rank it{% endblock %}
 {% block content %}
-      <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
-      <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
-      
-      <div class="starter-template">
-        <h1>Rank it!</h1>
-        <p class="lead">A research tool for prospective university students</p>
+
+<script src="{{ url_for('static',filename='js/my.js') }}"></script>
+
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+<link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static',filename='css/dataTables.bootstrap.min.css') }}" rel="stylesheet"> 
+
+<link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
+
+<div class="starter-template">
+  <h1>Rank it!</h1>
+  <p class="lead">A research tool for prospective university students</p>
+</div>
+
+<form action="" class="container ">
+  <div class="row">
+      <div class="form-group col-md-3">
+          <label for="studyLevelSelect">Study Level</label>
+          <select name="study" class="form-control" id="studyLevelSelect">
+                  <option>Undergraduate</option>
+                  <option>Postgraduate</option>
+          </select>        
       </div>
+      <div class="form-group col-md-3 ">
+          <label for="regionSelect">Region</label>
+          <select name="region" class="form-control" id="regionSelect">
+                  <option>Worldwide</option>
+                  <option>UK</option>
+          </select> 
+      </div>
+      <div class="form-group col-md-3 ">
+          <label for="departmentSelect">Department</label>
+          <select name="department" class="form-control" id="departmentSelect">
+                  <option>All departments</option>
+                  <option>Computer Science</option>
+          </select>    
+      </div>
+      <div class="form-group col-md-3 ">
+          <label for="yearSelect">Year</label>
+          <select name="year" class="form-control" id="yearSelect">
+                  <option>2018</option>
+                  <option>2017</option>
+          </select>
+      </div>
+  </div>
 
-     <!--form action="/rank?" method="get">
-        <div class="form-group">
-            <div class="input-group" >
-                    <label for="studyLevelSelect">Study Level</label>
-                    <select name="study" class="form-control" id="studyLevelSelect">
-                        <option>Undergraduate</option>
-                        <option>Postgraduate</option>
-                    </select>
+  <div class="row ">
+      <div class="form-group col-md-3">
+          <label>Graduation rates</label>
+          <input type="range" min="1" max="100" value="50" class="slider" id="studyLevelRange">
+          <label id="sliderval1">50</label>        
+      </div>
+      <div class="form-group col-md-3">
+          <label>Employment chance</label>
+          <input type="range" min="1" max="100" value="50" class="slider" id="employmentChanceRange">
+          <label id="sliderval2"></label>        
+      </div>
+      <div class="form-group col-md-3">
+          <label>Quality of life</label>
+          <input type="range" min="1" max="100" value="50" class="slider" id="qualityOfLifeRange">
+          <label id="sliderval3"></label>        
+      </div>
+      <div class="form-group col-md-3">
+          <label>Teaching excellence</label>
+          <input type="range" min="1" max="100" value="50" class="slider" id="teachingExcellenceRange">
+          <label id="sliderval4"></label>        
+      </div>
+  </div>
 
-                    <label for="regionSelect">Region</label>
-                    <select name="region" class="form-control" id="regionSelect">
-                        <option>Worldwide</option>
-                        <option>UK</option>
-                    </select>
+  <div class="row">
+      <div class="text-center">
+      <!--div class="col-md-3 col-md-offset-3"-->
+      <!--div class="col-md-3 col-center"-->    
+        <input type="submit" class="btn btn-default" value="Rank submit">
+        <!--input type="button" class="btn btn-default" value="Rank button" onclick="set_visible()"-->
+      </div>
+  </div>
+</form>
 
-                    <label for="departmentSelect">Department</label>
-                    <select name="deparment" class="form-control" id="departmentSelect">
-                        <option>All departments</option>
-                        <option>Computer Science</option>
-                    </select>
+<div class="container sd-table" style="visibility:hidden; margin-top: 20px"> 
+</div>
+<div class="modal"><!-- Place at bottom of page --></div>
+<script>
+    var slider1 = document.getElementById("studyLevelRange");
+    var output1 = document.getElementById("sliderval1");
+    output1.innerHTML = slider1.value; // Display the default slider value
 
-                    <label for="yearSelect">Year</label>
-                    <select name="year" class="form-control" id="yearSelect">
-                        <option>2018</option>
-                        <option>2017</option>
-                    </select>
-            </div>
-        </div>
+    // Update the current slider value (each time you drag the slider handle)
+    slider1.oninput = function() {
+    output1.innerHTML = this.value;
+    }
 
-        <div class="form-group-text">
-            <div id="val1" style="vertical-align:text-bottom; display:inline">Graduation rates</div>
-            <div id="val2" style="vertical-align:text-bottom; display:inline">Employment chances</div>
-            <div id="val3" style="vertical-align:text-bottom; display:inline">Quality of life</div>
-            <div id="val3" style="vertical-align:text-bottom; display:inline">Teaching excellence</div>
-         </div>
+    var slider2 = document.getElementById("employmentChanceRange");
+    var output2 = document.getElementById("sliderval2");
+    output2.innerHTML = slider2.value; 
+    slider2.oninput = function() {
+    output2.innerHTML = this.value;
+    }
 
-         <div class="form-group">
-            <div class="slidecontainer"  style="width:180px; height:auto; float:left;magin:50px;display:inline ">
-              <input type="range" min="1" max="100" value="50" class="slider" id="myRange1">
-              <span id="sliderval1"></span>
-            </div>
+    var slider3 = document.getElementById("qualityOfLifeRange");
+    var output3 = document.getElementById("sliderval3");
+    output3.innerHTML = slider3.value; 
+    slider3.oninput = function() {
+    output3.innerHTML = this.value;
+    }
 
-            <div class="slidecontainer"  style="width:180px; height:auto; float:left;magin:50px; display:inline">
-              <input type="range" min="1" max="100" value="50" class="slider" id="myRange2">
-              <span id="sliderval2"></span>
-            </div>
+    var slider4 = document.getElementById("teachingExcellenceRange");
+    var output4 = document.getElementById("sliderval4");
+    output4.innerHTML = slider4.value; 
+    slider4.oninput = function() {
+    output4.innerHTML = this.value;
+    }
 
-            <div class="slidecontainer"  style="width:180px; height:auto;float:left; display:inline">
-              <input type="range" min="1" max="100" value="50" class="slider" id="myRange3">
-              <span id="sliderval3"></span>
-            </div>
+    var table_header = "<table id='example' class='table table-hover table-bordered table-striped' style=width:100%; visibility:hidden; margin-top: 20px'>"
+                        +"<thead>"
+                        +"<tr>"
+                            +"<th class='col-md-1 text-center'>Rank</th>"
+                            +"<th class='col-md-3 text-center'>Name</th>"
+                            +"<th class='col-md-2 text-center'>Graduation rates</th>"
+                            +"<th class='col-md-2 text-center'>Employment chances</th>"
+                            +"<th class='col-md-2 text-center'>Quality of life</th>"
+                            +"<th class='col-md-2 text-center'>Teaching excellence</th>"
+                        +"</tr>"
+                        +"</thead>"
+                        +"<tbody>"; 
+    var table_footer = "</tbody></table>";
 
-            <div class="slidecontainer"  style="width:180px; height:auto;float:left;display:inline">
-              <input type="range" min="1" max="100" value="50" class="slider" id="myRange4">
-              <span id="sliderval4"></span>
-            </div>
-        </div>
-        <script>
-        var slider1 = document.getElementById("myRange1");
-        var output1 = document.getElementById("sliderval1");
-        output1.innerHTML = slider1.value; // Display the default slider value
+    function set_invisible(){
+      $(".sd-table").css({"visibility":"hidden"});
+    }
+    function set_visible(){
+      $(".sd-table").css({"visibility":"visible"});
+    }
+    function add_table(table){
+      $(".sd-table").html(table);
+      $('#example').DataTable();
+    }
+    function new_row(rank, PROVIDER_NAME, UKPRN, gr, ec, qol, te){
+      var html = "<tr>"+
+                "<td class='col-md-1 text-center'>"+rank+"</td>"+
+                "<td class='col-md-3 text-center'>"+"<a href='/institution/"+UKPRN+"'>"+PROVIDER_NAME+"</a></td>"+
+                "<td class='col-md-2 text-center'>"+gr+"%"+"</td>"+
+                "<td class='col-md-2 text-center'>"+ec+"%"+"</td>"+
+                "<td class='col-md-2 text-center'>"+qol+"%"+"</td>"+
+                "<td class='col-md-2 text-center'>"+te+"%"+"</td>"+  
+                "</tr>";          
+      return html;  
+    }
+    $(function () {
+        $('form').submit('click', function (event) {
+            formdata = $('form').serialize();
+            event.preventDefault();// using this page stop being refreshing 
+            $.ajax({
+                type: 'POST',
+                url: '/test',
+                data: formdata,
+                success: function (msg) {
+                  msg = msg.replace(/NaN/g, 'null');
+                  var json = $.parseJSON(msg);
+                  var table_rows = "";
+                  for(let i = 0; i < json.length; i++){
+                    if(typeof json[i].PROVIDER_NAME !== 'undefined'){
+                      table_rows = table_rows + new_row(i+1, json[i].PROVIDER_NAME, json[i].UKPRN, 100, 100, 100, 100);
+                    }
+                  }
+                  var table = table_header+table_rows+table_footer;
+                  add_table(table);
+                  set_visible();
+                }
+            });
+        });
+      });
 
-        // Update the current slider value (each time you drag the slider handle)
-        slider1.oninput = function() {
-          output1.innerHTML = this.value;
-        }
+$body = $("body");
+$(document).on({
+    ajaxStart: function() { $body.addClass("loading");    },
+     ajaxStop: function() { $body.removeClass("loading"); }    
+});
+</script>   
 
-        var slider2 = document.getElementById("myRange2");
-        var output2 = document.getElementById("sliderval2");
-        output2.innerHTML = slider2.value; 
-        slider2.oninput = function() {
-          output2.innerHTML = this.value;
-        }
-
-        var slider3 = document.getElementById("myRange3");
-        var output3 = document.getElementById("sliderval3");
-        output3.innerHTML = slider3.value; 
-        slider3.oninput = function() {
-          output3.innerHTML = this.value;
-        }
-
-        var slider4 = document.getElementById("myRange4");
-        var output4 = document.getElementById("sliderval4");
-        output4.innerHTML = slider4.value; 
-        slider4.oninput = function() {
-          output4.innerHTML = this.value;
-        }
-        </script>     
-        <div >
-            <input type="submit" class="btn btn-primary" value="Rank" style="background-color: black;text-align: center;margin-top: 40px;">
-        </div>
-     </form-->
-
-     <form action="" class="container ">
-        <div class="row">
-            <div class="form-group col-md-3">
-                <label for="studyLevelSelect">Study Level</label>
-                <select name="study" class="form-control" id="studyLevelSelect">
-                        <option>Undergraduate</option>
-                        <option>Postgraduate</option>
-                </select>        
-            </div>
-            <div class="form-group col-md-3 ">
-                <label for="regionSelect">Region</label>
-                <select name="region" class="form-control" id="regionSelect">
-                        <option>Worldwide</option>
-                        <option>UK</option>
-                </select> 
-            </div>
-            <div class="form-group col-md-3 ">
-                <label for="departmentSelect">Department</label>
-                <select name="deparment" class="form-control" id="departmentSelect">
-                        <option>All departments</option>
-                        <option>Computer Science</option>
-                </select>    
-            </div>
-            <div class="form-group col-md-3 ">
-                <label for="yearSelect">Year</label>
-                <select name="year" class="form-control" id="yearSelect">
-                        <option>2018</option>
-                        <option>2017</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="row ">
-            <div class="form-group col-md-3">
-                <label>Study Level</label>
-                <input type="range" min="1" max="100" value="50" class="slider" id="studyLevelRange">
-                <span id="sliderval1"></span>        
-            </div>
-            <div class="form-group col-md-3">
-                <label>Employment chance</label>
-                <input type="range" min="1" max="100" value="50" class="slider" id="employmentChanceRange">
-                <span id="sliderval2"></span>        
-            </div>
-            <div class="form-group col-md-3">
-                <label>Quality of life</label>
-                <input type="range" min="1" max="100" value="50" class="slider" id="qualityOfLifeRange">
-                <span id="sliderval3"></span>        
-            </div>
-            <div class="form-group col-md-3">
-                <label>Teaching excellence</label>
-                <input type="range" min="1" max="100" value="50" class="slider" id="teachingExcellenceRange">
-                <span id="sliderval4"></span>        
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-3">
-            <!--div class="col-md-3 col-md-offset-3"-->
-            <!--div class="col-md-3 col-center"-->    
-                <input type="submit" value="search">
-            </div>
-        </div>
-     </form>
     
 {% endblock %}

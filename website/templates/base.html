@@ -19,6 +19,7 @@
     <link href="{{ url_for('static',filename='css/starter-template.css') }}" rel="stylesheet">
 
     <link href="{{ url_for('static',filename='css/base.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static',filename='js/jquery-3.3.1.js') }}"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -45,8 +46,8 @@
           </ul>
            <form class="navbar-form navbar-right">
         <div class="form-group input-group" style="margin: 3px;"">
-            <input type="text" class="form-control" id="searchbar" placeholder="University/department,etc">
-            <span class="input-group-btn"><a class="btn btn-default"><span
+            <input type="text" class="form-control" id="searchbar" placeholder="type here ...">
+            <span class="input-group-btn"><a href="/search" class="btn btn-default"><span
                     class="glyphicon glyphicon-search"></span>Search</a></span>
         </div>
         </div><!--/.nav-collapse -->
@@ -65,29 +66,68 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
+
   </body>
 
-   <footer  class="footer navbar-fixed-bottom " style="background-color: : #bdbdbd;">
-      {% block footer %}
-      <span style="color: black"><a href="http://domain.invalid/">Terms of use</a></span>
-      <span style="color: black"><a href="http://domain.invalid/">About us</a></span>
-      <span style="color: black"><a href="http://domain.invalid/">Cookies</a></span>
-      <span style="color: black"><a href="http://domain.invalid/">Privacy</a></span>
 
-  
-    <section id="lab_social_icon_footer">
+<!-- Footer -->
+<footer class="page-footer font-small pt-4 ">
+
+    <!-- Footer Elements -->
+    <div class="container">
+
+      <!-- Call to action -->
+      <ul class="list-unstyled list-inline py-2">
+        <li class="list-inline-item">
+         <a href="http://webenlance.com" class="custom">Terms of use</a>
+        </li>
+        <li class="list-inline-item">
+          <a href="http://webenlance.com" class="custom">About us</a></a>
+        </li>
+        <li><a href="http://webenlance.com" class="custom">Cookies</a></li>
+        <li><a href="http://webenlance.com" class="custom">Privacy</a></li>
+      </ul>
+      <!-- Call to action -->
+
+    </div>
+    <!-- Footer Elements -->
+
+    <!-- Copyright -->
+   <section id="lab_social_icon_footer">
      <div class="container">
-        <div class="text-center center-block">
-                <a href="https://www.facebook.com/bootsnipp"><i id="social-fb" class="fa fa-facebook-square fa-3x social"></i></a>
-              <a href="https://twitter.com/bootsnipp"><i id="social-tw" class="fa fa-twitter-square fa-3x social"></i></a>
-              <a href="https://plus.google.com/+Bootsnipp-page"><i id="social-gp" class="fa fa-google-plus-square fa-3x social"></i></a>
-              <a href="mailto:#"><i id="social-em" class="fa fa-envelope-square fa-3x social"></i></a>
+        <div class="icon">
+                <a href="https://www.facebook.com/bootsnipp"><i id="social-fb" class="fa fa-facebook-square fa-3x social custom"></i></a>
+              <a href="https://twitter.com/bootsnipp"><i id="social-tw" class="fa fa-twitter-square fa-3x social custom"></i></a>
+              <a href="https://plus.google.com/+Bootsnipp-page"><i id="social-gp" class="fa fa-google-plus-square fa-3x social custom"></i></a>
+              <a href="mailto:#"><i id="social-em" class="fa fa-envelope-square fa-3x social custom"></i></a>
     </div>
 </div>
 </section>
-    {% endblock %}
-    </footer>
+    <!-- Copyright -->
+
+  </footer>
+  <!-- Footer -->
+
+   <style>
+   footer{
+    width: 100%;
+    height:100px;   
+    position:absolute;
+    bottom:0px;
+    left:0px;
+    background: #e0e0e0;
+
+}
+
+.custom {
+    color: black;
+}
+.icon {
+  position: fixed;
+  right: 50px;
+  
+}
+</style>
+ 
 </html>

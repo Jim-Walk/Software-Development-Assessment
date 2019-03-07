@@ -1,11 +1,58 @@
 {% extends "base.html" %}
 {% block title %}Rank it{% endblock %}
 {% block content %}
-      <div class="starter-template">
+
+<script src="{{ url_for('static',filename='js/my.js') }}"></script>
+
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+<link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static',filename='css/dataTables.bootstrap.min.css') }}" rel="stylesheet"> 
+
+<div class="starter-template" hidden>
         <h1>List of Universities</h1>
-        <p class="lead">{%for i in uni_list %}
-        <a href="/institution/{{i.UKPRN}}">{{i.PROVIDER_NAME}}</a></br>
-        {%endfor%}
+        <p class="lead">
+          {#%for i in uni_list %#}
+          {%for i in range(5) %}
+            <a href="/institution/{{uni_list[i].UKPRN}}">{{uni_list[i].PROVIDER_NAME}}</a></br>
+          {%endfor%}
         </p>
-      </div>
+        <input type="button" value="get universities">
+        <input type="submit" value="get">
+</div>
+<!------------- new table ---------------------->
+
+<div class="container">
+    <h1>List of Universities</h1>
+    <table id="example" class="table table-hover table-bordered table-striped" style="width:100%">
+        <thead>
+          <tr>
+            <th class="col-md-1 text-center">Rank</th>
+            <th class="col-md-3 text-center">Name</th>
+            <th class="col-md-2 text-center">Graduation rates</th>
+            <th class="col-md-2 text-center">Employment chances</th>
+            <th class="col-md-2 text-center">Quality of life</th>
+            <th class="col-md-2 text-center">Teaching excellence</th>
+          </tr>
+        </thead>
+        
+        <tbody>
+            {%for uni in uni_list %}
+              {%if uni.PROVIDER_NAME|length > 0 %}
+                <tr>
+                  <td class="col-md-1 text-center">{{loop.index}}</td>
+                  <td class="col-md-3 text-center"><a href="/institution/{{uni.UKPRN}}">{{uni.PROVIDER_NAME}}</a></br></td>
+                  <td class="col-md-2 text-center">75%</td>
+                  <td class="col-md-2 text-center">75%</td>
+                  <td class="col-md-2 text-center">75%</td>
+                  <td class="col-md-2 text-center">75%</td>  
+                </tr>
+              {%endif%}  
+            {%endfor%}  
+        </tbody>
+    </table>   
+</div>
+
+      
 {% endblock %}
