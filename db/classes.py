@@ -16,6 +16,9 @@ class Database(object):
 		self.ImportLocations()
 		self.ImportNSS()
 		self.ImportSalary()
+		self.ImportGraduationRates()
+		self.ImportEmploymentRates()
+		self.ComputeGraduationEmploymentRates()
 
 	def ImportInstitutions(self):
 		print('Importing Institutions...')
@@ -109,6 +112,7 @@ class Database(object):
 			kiscourseid = entry["KISCOURSEID"]
 			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'graduation_rate_percent': entry["UPASS"]} }, upsert=True )
 
+
 	def ImportEmploymentRates(self):
 		df = pd.read_csv('./data/EMPLOYMENT.csv')
 		print("Adding Employment Rates 6M post-graduation")
@@ -118,6 +122,32 @@ class Database(object):
 			entry = row.to_dict()
 			kiscourseid = entry["KISCOURSEID"]
 			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'employment_rate_percent': entry["WORKSTUDY"]} }, upsert=True )
+
+	def ComputeGraduationEmploymentRates(self):
+		institutions = self.institutions.find()
+		values_employment = []
+		values_graduation = []
+
+		for institution in institutions:
+			prn = institution["UKPRN"]
+			for course in self.courses.find({'UKPRN':prn}):
+				values_employment.append(sum(course['employment_rate_percent'])/len(course['employment_rate_percent']))
+				values_graduation.append(sum(course['graduation_rate_percent'])/len(course['graduation_rate_percent']))
+			
+			if len(values_graduation) > 0:
+				institution_gradrate = (sum(values_graduation)/len(values_graduation))
+			else:
+				institution_gradrate = None
+
+			if len(values_employment) > 0:
+				institution_emprate = (sum(values_employment)/len(values_employment))
+			else:
+				institution_emprate = None
+
+			self.institutions.update({'UKPRN':prn}, { '$push': { 'employment_rate_percent': institution_emprate} }, upsert=True  )
+			self.institutions.update({'UKPRN':prn}, { '$push': { 'graduation_rate_percent': institution_gradrate} }, upsert=True  )
+			values_employment.clear()
+			values_graduation.clear()
 
 class Institution(object):
 	instcol = db.institutions
