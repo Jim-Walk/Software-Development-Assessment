@@ -84,7 +84,7 @@
 
 <div class="container sd-table" style="visibility:hidden; margin-top: 20px"> 
 </div>
-
+<div class="modal"><!-- Place at bottom of page --></div>
 <script>
     var slider1 = document.getElementById("studyLevelRange");
     var output1 = document.getElementById("sliderval1");
@@ -175,6 +175,12 @@
             });
         });
       });
+
+$body = $("body");
+$(document).on({
+    ajaxStart: function() { $body.addClass("loading");    },
+     ajaxStop: function() { $body.removeClass("loading"); }    
+});
 </script>   
 
     
