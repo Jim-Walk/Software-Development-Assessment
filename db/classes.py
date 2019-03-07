@@ -99,6 +99,26 @@ class Database(object):
 			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'salary': entry} }, upsert=True )
 		self.courses.create_index([('$**', 'text')])
 
+	def ImportGraduationRates(self):
+		df = pd.read_csv('./data/DEGREECLASS.csv')
+		print("Adding Graduation Rate")
+		for index,row in df.iterrows():
+			if index%1000 == 0:
+					print(str(index)+' out of '+str(df.size) + ' graduation rates')
+			entry = row.to_dict()
+			kiscourseid = entry["KISCOURSEID"]
+			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'graduation_rate_percent': entry["UPASS"]} }, upsert=True )
+
+	def ImportEmploymentRates(self):
+		df = pd.read_csv('./data/EMPLOYMENT.csv')
+		print("Adding Employment Rates 6M post-graduation")
+		for index,row in df.iterrows():
+			if index%1000 == 0:
+					print(str(index)+' out of '+str(df.size) + ' employment rates')
+			entry = row.to_dict()
+			kiscourseid = entry["KISCOURSEID"]
+			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'employment_rate_percent': entry["WORKSTUDY"]} }, upsert=True )
+
 class Institution(object):
 	instcol = db.institutions
 
