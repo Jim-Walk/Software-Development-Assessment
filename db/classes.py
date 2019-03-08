@@ -133,7 +133,9 @@ class Database(object):
 		values_employment = []
 		values_graduation = []
 		print("computing graduation rates")
-		for institution in institutions:
+		for idx,institution in enumerate(institutions):
+			if idx%1000 == 0:
+					print(str(idx)+' out of '+str(institutions.count()) + 'institution rates computed')
 			prn = institution["UKPRN"]
 			for course in self.courses.find({'UKPRN':prn}):
 				values_employment.append(sum(course['employment_rate_percent'])/len(course['employment_rate_percent']))
@@ -157,13 +159,13 @@ class Database(object):
 
 	def AssignSubjects(self):
 		print("Assigning subjects to courses")
-		reader = csv.reader(open('data/CAH.csv', 'r'))
+		reader = csv.reader(open('./data/CAH.csv', 'r'))
 		lookup = {}
 		for row in reader:
 			k, v = row
 			lookup[k] = v
 
-		reader = csv.reader(open('data/SBJ.csv', 'r'))
+		reader = csv.reader(open('./data/SBJ.csv', 'r'))
 		cah_courses = {}
 		for row in reader:
 			k, v = row
@@ -208,8 +210,3 @@ class Course(object):
 	def GetByInstitution(self, ukprn):
 		query = {'UKPRN':ukprn}
 		return self.coursecol.find_one(query)
-
-
-if __name__ == '__main__':
-	db = Database()
-	db.AssignSubjects()
