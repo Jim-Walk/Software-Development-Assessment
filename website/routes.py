@@ -26,16 +26,36 @@ def test():
 
 @app.route('/search', methods=['GET'])
 def search():
-    return render_template('search_result.html')
+    if request.method == 'GET':
+        search_str = request.args['searchInput'].replace('+', ' ')
+        courses = mongo.db.courses.find({"$text": {"$search": search_str}},
+                                        limit=10)
+        unis = mongo.db.institutions.find({"$text": {"$search": search_str}},
+                                        limit=10)
+        uni_list = []
+        course_list = []
+
+        # extract values from mongo cursor before we can use them
+        for uni in unis:
+            uni_list += [uni]
+
+        for course in courses:
+            course_list += [course]
+        for course in course_list:
+            uni = mongo.db.institutions.find_one({'UKPRN': course['UKPRN']})
+            course.update(uni)
+
+    return render_template('search_result.html', courses=course_list,
+                           unis=uni_list)
 
 
 @app.route('/institution/<int:UKPRN>')
 def institution(UKPRN):
     inst = mongo.db.institutions.find_one({'UKPRN':UKPRN})
-    logo = get_logo(inst['PROVIDER_NAME'])
-    #logo = "/static/images/uoe_logo.png" #in case you exceed the limit
+    #logo = get_logo(inst['PROVIDER_NAME'])
+    logo = "/static/images/uoe_logo.png" #in case you exceed the limit
     wiki = get_wiki(inst['PROVIDER_NAME'])
-    courses = mongo.db.courses.find({'UKPRN':UKPRN})
+    courses = mongo.db.courses.find({'UKPRN':UKPRN}, limit=7)
     return render_template('institution.html', inst=inst, courses=courses,
                            logo=logo, wiki=wiki)
 
@@ -77,7 +97,7 @@ def rank():
 
         # compile list of courses with no missing data
         courses = mongo.db.courses.find({"$text": {"$search": department}},
-                                        limit=50)
+                                        limit=300)
         course_and_uni =[]
         c_list = []
         # get courses out of the pymongo cursor

@@ -1,5 +1,7 @@
 from pymongo import MongoClient, TEXT
 import pandas as pd
+import csv
+
 client = MongoClient()
 db = client.rankit
 
@@ -9,6 +11,7 @@ class Database(object):
 	db = MongoClient().rankit
 	institutions = db.institutions
 	courses = db.courses
+	subjects = db.subjects
 
 	def Bootstrap(self):
 		self.ImportInstitutions()
@@ -16,6 +19,10 @@ class Database(object):
 		self.ImportLocations()
 		self.ImportNSS()
 		self.ImportSalary()
+		self.ImportGraduationRates()
+		self.ImportEmploymentRates()
+		self.ComputeGraduationEmploymentRates()
+		self.AssignSubjects()
 
 	def ImportInstitutions(self):
 		print('Importing Institutions...')
@@ -99,6 +106,81 @@ class Database(object):
 			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'salary': entry} }, upsert=True )
 		self.courses.create_index([('$**', 'text')])
 
+	def ImportGraduationRates(self):
+		df = pd.read_csv('./data/DEGREECLASS.csv')
+		print("Adding Graduation Rate")
+		for index,row in df.iterrows():
+			if index%1000 == 0:
+					print(str(index)+' out of '+str(df.size) + ' graduation rates')
+			entry = row.to_dict()
+			kiscourseid = entry["KISCOURSEID"]
+			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'graduation_rate_percent': entry["UPASS"]} }, upsert=True )
+
+
+	def ImportEmploymentRates(self):
+		df = pd.read_csv('./data/EMPLOYMENT.csv')
+		print("Adding Employment Rates 6M post-graduation")
+		for index,row in df.iterrows():
+			if index%1000 == 0:
+					print(str(index)+' out of '+str(df.size) + ' employment rates')
+			entry = row.to_dict()
+			kiscourseid = entry["KISCOURSEID"]
+			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'employment_rate_percent': entry["WORKSTUDY"]} }, upsert=True )
+
+	def ComputeGraduationEmploymentRates(self):
+		institutions = self.institutions.find()
+		values_employment = []
+		values_graduation = []
+		print("computing graduation rates")
+		for idx,institution in enumerate(institutions):
+			if idx%1000 == 0:
+					print(str(idx)+' out of '+str(institutions.count()) + 'institution rates computed')
+			prn = institution["UKPRN"]
+			for course in self.courses.find({'UKPRN':prn}):
+				values_employment.append(sum(course['employment_rate_percent'])/len(course['employment_rate_percent']))
+				values_graduation.append(sum(course['graduation_rate_percent'])/len(course['graduation_rate_percent']))
+			
+			if len(values_graduation) > 0:
+				institution_gradrate = (sum(values_graduation)/len(values_graduation))
+			else:
+				institution_gradrate = None
+
+			if len(values_employment) > 0:
+				institution_emprate = (sum(values_employment)/len(values_employment))
+			else:
+				institution_emprate = None
+
+			self.institutions.update({'UKPRN':prn}, { '$push': { 'employment_rate_percent': institution_emprate} }, upsert=True  )
+			self.institutions.update({'UKPRN':prn}, { '$push': { 'graduation_rate_percent': institution_gradrate} }, upsert=True  )
+			values_employment.clear()
+			values_graduation.clear()
+
+
+	def AssignSubjects(self):
+		print("Assigning subjects to courses")
+		reader = csv.reader(open('./data/CAH.csv', 'r'))
+		lookup = {}
+		for row in reader:
+			k, v = row
+			lookup[k] = v
+
+		reader = csv.reader(open('./data/SBJ.csv', 'r'))
+		cah_courses = {}
+		for row in reader:
+			k, v = row
+			cah_courses[k] = v
+
+		courses = self.courses.find()
+
+		for idx,doc in enumerate(courses):
+			if idx%1000 == 0:
+					print(str(idx)+' out of '+str(courses.count()) + 'courses have been assigned a subject')
+			kiscourseid = doc["KISCOURSEID"]
+			subject_cah = cah_courses[kiscourseid]
+			subject_description = lookup[subject_cah]
+			self.courses.update({"KISCOURSEID": kiscourseid}, { '$push': {'subject_cah' : subject_cah} }, upsert=True)
+			self.courses.update({"KISCOURSEID": kiscourseid}, { '$push': {'subject_description' : subject_description} }, upsert=True)
+
 class Institution(object):
 	instcol = db.institutions
 
@@ -127,4 +209,3 @@ class Course(object):
 	def GetByInstitution(self, ukprn):
 		query = {'UKPRN':ukprn}
 		return self.coursecol.find_one(query)
-

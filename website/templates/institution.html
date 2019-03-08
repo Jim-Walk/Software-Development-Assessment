@@ -32,9 +32,13 @@
             <div class="row">  <!-- Programs' list -->
                 <div class="col-md-6">
                     <ul style="padding-right:-20px">
-                    {% for c in range(7) %}
-                      <li><a style="font-family:sans-serif; font-size: 20px" href="/course/{{inst.PROVIDER_NAME}}/{{courses[c].KISCOURSEID}}">{{courses[c].TITLE}}</a></li>
-                    {%endfor%}
+                    {% if courses %}
+                    {% for c in courses %}
+                      <li><a style="font-family:sans-serif; font-size: 20px" href="/course/{{inst.PROVIDER_NAME}}/{{c.KISCOURSEID}}">{{c.TITLE}}</a></li>
+                    {% endfor %}
+                    {% else %}
+                        <li> No courses found </li>
+                    {% endif %}
                     </ul>
                 </div> 
                 <!--div class="col-md-6">
