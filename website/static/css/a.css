@@ -65,3 +65,8 @@ body.loading .modal {
 body.loading .modal {
   display: block;
 }
+
+.sd-panel {
+  margin-left: 10%;
+  margin-right: 10%;
+}

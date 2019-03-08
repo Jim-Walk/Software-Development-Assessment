@@ -18,7 +18,7 @@
 </div>
 
 <form id="rank-form" action="" class="container ">
-  <div class="row">
+  <div class="row"> <!-- inputs and selects -->
       <div class="form-group col-md-3">
           <label for="studyLevelSelect">Study Level</label>
           <select name="study" class="form-control" id="studyLevelSelect">
@@ -34,11 +34,8 @@
           </select> 
       </div>
       <div class="form-group col-md-3 ">
-          <label for="departmentSelect">Department</label>
-          <select name="department" class="form-control" id="departmentSelect">
-                  <option>All departments</option>
-                  <option>Computer Science</option>
-          </select>    
+          <label for="courseSelect">Course</label> 
+          <input name="course" type="text" placeholder="type course name" class="form-control" required>
       </div>
       <div class="form-group col-md-3 ">
           <label for="yearSelect">Year</label>
@@ -49,35 +46,32 @@
       </div>
   </div>
 
-  <div class="row ">
+  <div class="row "> <!-- sliders -->
       <div class="form-group col-md-3">
           <label>Graduation rates</label>
-          <input type="range" min="1" max="100" value="50" class="slider" id="studyLevelRange">
+          <input name='grad_rates' type="range" min="1" max="100" value="50" class="slider" id="studyLevelRange">
           <label id="sliderval1">50</label>        
       </div>
       <div class="form-group col-md-3">
           <label>Employment chance</label>
-          <input type="range" min="1" max="100" value="50" class="slider" id="employmentChanceRange">
+          <input name='empl_chance' type="range" min="1" max="100" value="50" class="slider" id="employmentChanceRange">
           <label id="sliderval2"></label>        
       </div>
       <div class="form-group col-md-3">
-          <label>Quality of life</label>
-          <input type="range" min="1" max="100" value="50" class="slider" id="qualityOfLifeRange">
+          <label>Salary</label>
+          <input name='salary' type="range" min="1" max="100" value="50" class="slider" id="salaryOfLifeRange">
           <label id="sliderval3"></label>        
       </div>
       <div class="form-group col-md-3">
           <label>Teaching excellence</label>
-          <input type="range" min="1" max="100" value="50" class="slider" id="teachingExcellenceRange">
+          <input name='teaching' type="range" min="1" max="100" value="50" class="slider" id="teachingExcellenceRange">
           <label id="sliderval4"></label>        
       </div>
   </div>
 
-  <div class="row">
-      <div class="text-center">
-      <!--div class="col-md-3 col-md-offset-3"-->
-      <!--div class="col-md-3 col-center"-->    
+  <div class="row"> <!-- submit button -->
+      <div class="text-center">  
         <input type="submit" class="btn btn-default" value="Rank submit">
-        <!--input type="button" class="btn btn-default" value="Rank button" onclick="set_visible()"-->
       </div>
   </div>
 </form>
@@ -102,7 +96,7 @@
     output2.innerHTML = this.value;
     }
 
-    var slider3 = document.getElementById("qualityOfLifeRange");
+    var slider3 = document.getElementById("salaryOfLifeRange");
     var output3 = document.getElementById("sliderval3");
     output3.innerHTML = slider3.value; 
     slider3.oninput = function() {
@@ -118,14 +112,13 @@
 
     var table_header = "<table id='example' class='table table-hover table-bordered table-striped' style=width:100%; visibility:hidden; margin-top: 20px'>"
                         +"<thead>"
-                        +"<tr>"
-                            +"<th class='col-md-1 text-center'>Rank</th>"
-                            +"<th class='col-md-3 text-center'>Name</th>"
-                            +"<th class='col-md-2 text-center'>Graduation rates</th>"
-                            +"<th class='col-md-2 text-center'>Employment chances</th>"
-                            +"<th class='col-md-2 text-center'>Quality of life</th>"
-                            +"<th class='col-md-2 text-center'>Teaching excellence</th>"
-                        +"</tr>"
+                          +"<tr>"
+                              +"<th class='col-md-1 text-center'>Rank</th>"
+                              +"<th class='col-md-3 text-center'>Name</th>"
+                              +"<th class='col-md-2 text-center'>Graduation rates</th>"
+                              +"<th class='col-md-2 text-center'>Salary</th>"
+                              +"<th class='col-md-2 text-center'>Teaching excellence</th>"
+                          +"</tr>"
                         +"</thead>"
                         +"<tbody>"; 
     var table_footer = "</tbody></table>";
@@ -140,14 +133,13 @@
       $(".sd-table").html(table);
       $('#example').DataTable();
     }
-    function new_row(rank, PROVIDER_NAME, UKPRN, gr, ec, qol, te){
+    function new_row(rank, PROVIDER_NAME, UKPRN, title, grad_rates, salary, teaching){
       var html = "<tr>"+
                 "<td class='col-md-1 text-center'>"+rank+"</td>"+
-                "<td class='col-md-3 text-center'>"+"<a href='/institution/"+UKPRN+"'>"+PROVIDER_NAME+"</a></td>"+
-                "<td class='col-md-2 text-center'>"+gr+"%"+"</td>"+
-                "<td class='col-md-2 text-center'>"+ec+"%"+"</td>"+
-                "<td class='col-md-2 text-center'>"+qol+"%"+"</td>"+
-                "<td class='col-md-2 text-center'>"+te+"%"+"</td>"+  
+                "<td class='col-md-3 text-center'>"+"<a href='/institution/"+UKPRN+"'>"+PROVIDER_NAME+"<br>"+title+"</a></td>"+
+                "<td class='col-md-2 text-center'>"+grad_rates+"%"+"</td>"+
+                "<td class='col-md-2 text-center'>"+salary+"$"+"</td>"+
+                "<td class='col-md-2 text-center'>"+teaching+"%"+"</td>"+  
                 "</tr>";          
       return html;  
     }
@@ -157,15 +149,24 @@
             event.preventDefault();// using this page stop being refreshing 
             $.ajax({
                 type: 'POST',
-                url: '/test',
+                url: '/rank',
                 data: formdata,
                 success: function (msg) {
                   msg = msg.replace(/NaN/g, 'null');
                   var json = $.parseJSON(msg);
+                  console.log(json);
                   var table_rows = "";
                   for(let i = 0; i < json.length; i++){
                     if(typeof json[i].PROVIDER_NAME !== 'undefined'){
-                      table_rows = table_rows + new_row(i+1, json[i].PROVIDER_NAME, json[i].UKPRN, 100, 100, 100, 100);
+                      table_rows = table_rows + new_row(
+                                                /*rank*/  i+1, 
+                                                          json[i].PROVIDER_NAME, 
+                                                          json[i].UKPRN, 
+                                                          json[i].TITLE, 
+                                          /*grad rates*/  100, 
+                                              /*salary*/  json[i]['salary'][0].MED, 
+                                            /*teaching*/  json[i]['nss'][0].Q27
+                                                        );
                     }
                   }
                   var table = table_header+table_rows+table_footer;
@@ -183,5 +184,4 @@ $(document).on({
 });
 </script>   
 
-    
 {% endblock %}

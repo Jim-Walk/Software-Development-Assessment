@@ -44,20 +44,25 @@
          </li>
             <li><a href="/unis" style="margin: 3.5px;">List of Universities</a></li>
           </ul>
-           <form class="navbar-form navbar-right" action="/search" method="get">
-            <div class="form-group input-group" style="margin: 3px;">
-            <input type="text" class="form-control" name="searchInput" id="searchbar" placeholder="type here ...">
-            <button type="submit" class="btn btn-primary">Search</button>
+           <form class="navbar-form navbar-right">
+        <div class="form-group input-group" style="margin: 3px;"">
+            <input type="text" class="form-control" id="searchbar" placeholder="type here ...">
+            <span class="input-group-btn"><a href="/search" class="btn btn-default"><span
+                    class="glyphicon glyphicon-search"></span>Search</a></span>
+        </div>
         </div><!--/.nav-collapse -->
-        </form>
+
+    </form>
       </div>
     </nav>
-  
-    <div class="content">
-      <div class="inner-content" >
-        {% block content %}{% endblock %}        
-      </div>
-    </div>
+
+    
+   <div  class="content">
+              <div class="inner-content">
+                      {% block content %}{% endblock %}
+              </div>
+       </div>
+
 
   </body>
 
