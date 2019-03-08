@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 import classes
 
-def main():
+if __name__ == '__main__':
     d = classes.Database()
     d.Bootstrap()
-
-main()

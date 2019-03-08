@@ -1,5 +1,7 @@
 from pymongo import MongoClient, TEXT
 import pandas as pd
+import csv
+
 client = MongoClient()
 db = client.rankit
 
@@ -9,6 +11,7 @@ class Database(object):
 	db = MongoClient().rankit
 	institutions = db.institutions
 	courses = db.courses
+	subjects = db.subjects
 
 	def Bootstrap(self):
 		self.ImportInstitutions()
@@ -19,6 +22,7 @@ class Database(object):
 		self.ImportGraduationRates()
 		self.ImportEmploymentRates()
 		self.ComputeGraduationEmploymentRates()
+		self.AssignSubjects()
 
 	def ImportInstitutions(self):
 		print('Importing Institutions...')
@@ -127,8 +131,10 @@ class Database(object):
 		institutions = self.institutions.find()
 		values_employment = []
 		values_graduation = []
-
-		for institution in institutions:
+		print("computing graduation rates")
+		for idx,institution in enumerate(institutions):
+			if idx%1000 == 0:
+					print(str(idx)+' out of '+str(institutions.count()) + 'institution rates computed')
 			prn = institution["UKPRN"]
 			for course in self.courses.find({'UKPRN':prn}):
 				values_employment.append(sum(course['employment_rate_percent'])/len(course['employment_rate_percent']))
@@ -148,6 +154,32 @@ class Database(object):
 			self.institutions.update({'UKPRN':prn}, { '$push': { 'graduation_rate_percent': institution_gradrate} }, upsert=True  )
 			values_employment.clear()
 			values_graduation.clear()
+
+
+	def AssignSubjects(self):
+		print("Assigning subjects to courses")
+		reader = csv.reader(open('./data/CAH.csv', 'r'))
+		lookup = {}
+		for row in reader:
+			k, v = row
+			lookup[k] = v
+
+		reader = csv.reader(open('./data/SBJ.csv', 'r'))
+		cah_courses = {}
+		for row in reader:
+			k, v = row
+			cah_courses[k] = v
+
+		courses = self.courses.find()
+
+		for idx,doc in enumerate(courses):
+			if idx%1000 == 0:
+					print(str(idx)+' out of '+str(courses.count()) + 'courses have been assigned a subject')
+			kiscourseid = doc["KISCOURSEID"]
+			subject_cah = cah_courses[kiscourseid]
+			subject_description = lookup[subject_cah]
+			self.courses.update({"KISCOURSEID": kiscourseid}, { '$push': {'subject_cah' : subject_cah} }, upsert=True)
+			self.courses.update({"KISCOURSEID": kiscourseid}, { '$push': {'subject_description' : subject_description} }, upsert=True)
 
 class Institution(object):
 	instcol = db.institutions
@@ -177,4 +209,3 @@ class Course(object):
 	def GetByInstitution(self, ukprn):
 		query = {'UKPRN':ukprn}
 		return self.coursecol.find_one(query)
-
