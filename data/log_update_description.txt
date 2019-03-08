@@ -1,0 +1,163 @@
+Unistats 2018/19 Corrections and Revisions Description
+
+
+Update published: 30/01/2019
+
+-Provider mergers and status changes as of 07/01/2019
+
+	Original_UKPRN	New_UKPRN	Original_Name					New_Name
+	10000093	10004552	Accrington and Rossendale College		Nelson and Colne College
+	10001082	10005669	Cadbury Sixth Form College			Sandwell College
+	10007299	10003023	North Shropshire College			Herefordshire , Ludlow, and North Shropshire College
+
+-Latest approved amendments to underlying further education college data as of 07/01/2019	
+	
+	These are changes to improve the accuracy of the underlying data that is used on Unistats.
+
+	2016/17		10007945	Highbury College Portsmouth
+	2016/17		10001778	Croydon College
+	2016/17		10004718	North Warwickshire and South Leicestershire College
+	2016/17		10000536 	Barnsley College
+	2015/16		10003894  	Lewisham Southwark College
+
+-Correction to include amended DLHE target list data for Further Education Colleges for 2016/17
+
+	OfS discovered and corrected an error in the underlying data for FECs when calculating the DLHE sample size caused by not including amendments to the 2016/17 DLHE target list. 
+
+	Published data for one provider was affected: 
+
+	10003558 - Kendal College (1 course)
+
+
+
+Update published: 19/12/2018
+
+-Provider mergers and status changes as of 01/10/2018
+
+	These are changes to the underlying data that is used on Unistats.
+
+	Original_UKPRN	New_UKPRN	Original_Name					New_Name
+	10002919	10080811	Hartpury College				Hartpury University
+	10005414	10006341	Redcar & Cleveland College			Stockton Riverside College
+	10006432	10002923	Sussex Downs College				East Sussex College Group
+	10013357	10067853	The Academy of Contemporary Music Limited	ACM Guildford Limited
+	
+	10022944	Stratford College London Limited have had their courses de-designated for student support purposes, and therefore have been removed from Unistats.
+		
+-Changes in funding status as of 01/10/2018
+	
+	These are changes to the underlying data that is used on Unistats. Providers that are not directly funded are excluded from underlying datasets. 
+
+	10000409 - Ashton Sixth Form College
+	10001446 - Cirencester College
+
+-Latest approved amendments to underlying further education college data as of 06/11/2018	
+	
+	These are changes to improve the accuracy of the underlying data that is used on Unistats.
+
+	2015/16	10002107 - The Windsor Forest Colleges Group
+	2015/16	10006963 - New City College
+	2015/16	10009614 - NPTC Group
+	2016/17	10003558 - Kendal College
+	2016/17	10005822 - Shrewsbury Colleges Group
+	2016/17	10006020 - Southampton City College
+
+-Correction to LDCS to CAH conversion
+
+	OfS discovered and corrected an error in one LDCS subject code used by FECs to assign subjects to their courses when converting to 
+	Common Aggregation Hierarchy subject codes. 
+
+	This is a step in the process of creating the underlying data used on Unistats. 
+
+	Published data for two providers was affected: 
+
+	10002899 - Harlow College (1 course)
+	10005534 - RNN Group (1 course)
+
+-Correction to include amended continuation data for Further Education Colleges from 2014 ILR
+
+	OfS discovered and corrected an error in the datasets used to calculate continuation that caused amended data for 2014/15 to be omitted from 
+	continuation calculations.  
+
+	Published data for two providers was affected: 
+
+	10005124 - Plumpton College (3 courses)
+	10006020 - Southampton City College (1 course)
+
+-Correction to include amended data for Further Education Colleges from 2017 NSS
+
+	OfS discovered and corrected an error in the datasets used to calculate NSS satisfaction that caused amended data for 2017 to be omitted.  
+
+	Published data for 10 providers was affected: 
+
+	10000754 - Blackpool and the Fylde College (1 course)
+	10000820 - Bournemouth and Poole College, The (2 courses)
+	10000840 - Bradford College (19 courses)
+	10002899 - Harlow College (1 course)
+	10003035 - Hertford Regional College (1 course)
+	10003674 - South Thames Colleges Group (1 course)
+	10003855 - Leeds College of Building (4 courses)
+	10007011 - Northampton College (2 courses)
+	10007859 - Warwickshire College (6 courses)
+	10007977 - Heart of Worcestershire College (7 courses)
+
+-Correction to 2016 DLHE population for further education colleges
+
+	OfS discovered and corrected an error in the datasets used to identify the 2016 DLHE population for further education colleges.
+	
+	This is a step in the process of creating the underlying data used on Unistats. Changes to salary data in the underlying DLHE data can affect other providers as 
+	salary data is adjusted for all providers based on a regional weighted average. 
+
+	Published data for three providers was affected:
+	
+	10000610 - Bedford College (13 courses)
+	10001476 - United Colleges Group (1 course)
+	10007817 - Chichester College (1 course)
+
+-Refinements to exclude FE from continuation algorithm for further education colleges
+
+	OfS has restricted its definition of higher education courses to exclude certain types of further education that were being classified as higher education. 
+
+	Published data for three providers was affected: 
+
+	10000415 - Askham Bryan College (8 courses)
+	10000878 - Bridgwater and Taunton College (1 course)
+	10004599 - NCG (1 course)
+
+-Correction to NSS linking method for HESA Student and HESA APStudent collections 
+
+	HESA have implemented an improved linking method for combining NSS data and Student data which has resulted in more data being available for some providers.   
+	This is a step in the process of creating the underlying data used on Unistats. 
+
+        Underlying data for nine providers was affected:
+
+        10037544 - BIMM Limited
+	10030391 - London Churchill College Ltd
+	10023290 - West London College of Business & Management Sciences Limited
+	10028216 - Brit College Limited
+	10005470 - Richmond, the American International University in London, Inc.
+	10045476 - Met Film School Limited
+	10001546 - The College of Integrated Chinese Medicine
+	10004320 - The Metanoia Institute
+	10023452 - The Markfield Institute of Higher Education
+
+-Correction to NSS linking method for students intercalating in their penultimate year in HESA Student and HESA APStudent collections 
+
+	HESA have implemented an improved linking method for linking combining NSS data and Student data which has resulted in more data being available 
+	for providers with intercalating students. This is a step in the process of creating the underlying data used on Unistats. 
+
+	Underlying data for nine providers was affected:
+
+	10006840 - The University of Birmingham
+	10007799 - University of Newcastle upon Tyne
+	10007786 - University of Bristol
+	10007158 - University of Southampton
+	10005343 - Queen's University of Belfast
+	10006842 - The University of Liverpool
+	10007795 - The University of Leeds
+	10007157 - The University of Sheffield
+	10007782 - St. George's Hospital Medical School
+
+	
+
+

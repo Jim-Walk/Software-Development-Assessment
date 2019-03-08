@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Rank it
+
+{% endblock %}
+{% block content %}
+
+ <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+ <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
+
+<h1>Search results</h1>
+<hr>
+<div>
+    {% if unis %}
+        <h2> Institutions </h2>
+        <ul>
+            {% for uni in unis %}
+            <li> <a href="/institution/{{ uni.UKPRN }}">{{ uni.PROVIDER_NAME }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if courses %}
+        <h2> Courses </h2>
+        <ul>
+            {% for course in courses %}
+            <li> <a href="/course/{{ course.PROVIDER_NAME
+            }}/{{course.KISCOURSEID}}">{{ course.TITLE }}</a> - <a
+                    href="/institution/{{course.UKPRN}}">{{course.PROVIDER_NAME}}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+
+
+{% endblock %}

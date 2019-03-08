@@ -1,0 +1,72 @@
+.sd_percentage { 
+    font-family:sans-serif; 
+    font-size: 15px; 
+    width: 120px;
+    height: 80px;
+    border-radius: 9px;
+    padding: 10px;
+    text-align: center;
+    background-color:floralwhite;
+  }
+  h3 {
+    font-family:sans-serif;    
+  }
+.sd_navigation{
+  padding: 10px;
+  font-size: 15px; 
+}
+.sd_navigation_item{
+  padding-right: 5px;
+}
+img.sd_navigation_item{
+  width: 15px;
+}
+.equal {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+}
+.imageCenterAlign{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.topAlign{
+  top:50%;
+}
+
+.col-centered{
+  float: none;
+  margin: 0 auto;
+}
+
+.modal {
+  display:    none;
+  position:   fixed;
+  z-index:    1000;
+  top:        0;
+  left:       0;
+  height:     100%;
+  width:      100%;
+  background: rgba( 255, 255, 255, .8 ) 
+              url('http://i.stack.imgur.com/FhHRx.gif') 
+              50% 50% 
+              no-repeat;
+}
+
+/* When the body has the loading class, we turn
+ the scrollbar off with overflow:hidden */
+body.loading .modal {
+  overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+ modal element will be visible */
+body.loading .modal {
+  display: block;
+}
+
+.sd-panel {
+  margin-left: 10%;
+  margin-right: 10%;
+}

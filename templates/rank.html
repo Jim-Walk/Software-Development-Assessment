@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}RankIt - ranks{% endblock %}
+{% block content %}
+      <div class="starter-template">
+        <h1>Ranks</h1>
+      </div>
+        <table class="table table-striped">
+            <thead>
+                <th scope="col">University</th>
+                <th scope="col">Course</th>
+                <th scope="col">Teaching Quality</th>
+                <th scope="col">Median Salary</th>
+            </thead>
+            <tbody>
+            {% for course in courses %}
+                <tr>
+                    <td><a
+                    href=/institution/{{course.UKPRN}}">{{course.PROVIDER_NAME}}</a></td>
+                    <td><a href="/course/{{course.PROVIDER_NAME}}/{{course.KISCOURSEID}}">{{course.TITLE}}</a></td>
+                    <td>{{course.nss.0.Q27}}</td>
+                    <td>{{course.salary.0.MED}}</td>
+                </tr>
+            {%endfor%}
+            </tbody>
+        </table>
+{% endblock %}
