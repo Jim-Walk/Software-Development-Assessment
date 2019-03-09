@@ -34,7 +34,7 @@
                     <ul style="padding-right:-20px">
                     {% if courses %}
                     {% for c in courses %}
-                      <li><a style="font-family:sans-serif; font-size: 20px" href="/course/{{inst.PROVIDER_NAME}}/{{c.KISCOURSEID}}">{{c.TITLE}}</a></li>
+                      <li><a style="font-family:sans-serif; font-size: 20px" href="/course/{{inst.UKPRN}}/{{c.KISCOURSEID}}">{{c.TITLE}}</a></li>
                     {% endfor %}
                     {% else %}
                         <li> No courses found </li>

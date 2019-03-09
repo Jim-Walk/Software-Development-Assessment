@@ -6,14 +6,14 @@
 
       <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
       <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
-
+<br><br>
       <div class="container" style="padding:10px">
           <div class='row sd_navigation'>
             <a href="/" class="sd_navigation_item" style="color:#333333"><u>Home</u></a>
             <img class="sd_navigation_item" src="/static/images/next1.png" disabled/>
-            <a href="/institution/{{course.UKPRN}}" class="sd_navigation_item" style="color:#333333"><u>University profile</u></a>
+            <a href="/institution/{{institution.UKPRN}}" class="sd_navigation_item" style="color:#333333"><u>{{institution.PROVIDER_NAME.title()}}</u></a>
             <img class="sd_navigation_item" src="/static/images/next1.png" disabled/>
-            <label class="sd_navigation_item">Programme profile</label>
+            <label class="sd_navigation_item">{{course.TITLE}}</label>
           </div>
       </div>
 
@@ -22,35 +22,22 @@
         <h1>{{course.TITLE}}</h1>
       </div>
 
+
       <div class="panel panel-default sd-panel">
         <div class="panel-heading">
             <h3 class="panel-title">
-                Programme description
+                 <span class="glyphicon glyphicon-share"></span> Programme links
             </h3>
         </div>
-        <div class="panel-body" id="pro_dscri">
-            <p class="lead">
-              This fundamental course for all writing students introduces students 
-              to the conventions of academic writing. It emphasizes defining and developing 
-              a significant topic and using principles of clear thinking to support 
-              an assertive or argumentative thesis. Students will gain an understanding 
-              of their subject matter, audience, purpose, and point-of-view, 
-              and demonstrate that understanding through the organization and development 
-              of their essays. Students will learn how to analyze and evaluate other writers' work 
-              to sharpen their critical abilities as readers and writers.
-            </p>
-        </div>
+        <div class="btn-group btn-group-justified">
+            <a href="{{course.CRSEURL}}" class="btn btn-primary">Course Page</a>
+            <a href="{{course.ASSURL}}" class="btn btn-primary">Assessment</a>
+            <a href="{{course.EMPLOYURL}}" class="btn btn-primary">Employment Opportunities</a>
+            <a href="{{course.SUPPORTURL}}" class="btn btn-primary">Financing</a>
+            <a href="{{course.LTURL}}" class="btn btn-primary">Teaching Methods</a>
+          </div>
       </div>
-      <div class="panel panel-default sd-panel">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                Programme link
-            </h3>
-        </div>
-        <div class="panel-body" id="pro_dscri">
-            <a href="{{course.LTURL}}">{{course.LTURL}}</a>
-        </div>
-      </div>
+
       <div class="panel panel-default sd-panel">
         <div class="panel-heading">
             <h3 class="panel-title">
@@ -58,44 +45,77 @@
             </h3>
         </div>
         <div class="panel-body" id="pro_dscri">        
-          <table class="table table-bordered">
-              <thead>
-                <tr>
-                  <th scope="col" style="width:25%">Programme start date</th>
-                  <th scope="col" style="width:25%">Application deadline</th>
-                  <th scope="col" style="width:25%">Study mode</th>
-                  <th scope="col" style="width:25%">Duration</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td id="infor_sta_date">{{date}}</td>
-                  <td id="infor_deadline">{{deadline}}</td>
-                  <td id="infor_mode">{{modes}}</td>
-                  <td id="infor_duration">{{duration}}</td>
-                </tr>
-              </tbody>
-          </table>
+
 
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th scope="col" style="width:25%">Garduation rates</th>
+                <th scope="col" style="width:25%">Graduation rates</th>
                 <th scope="col" style="width:25%">Employment chance</th>
-                <th scope="col" style="width:25%">Salary</th>
-                <th scope="col" style="width:25%">Teaching excellence</th>
+                <th scope="col" style="width:25%">Expected Salary</th>
+                <th scope="col" style="width:25%">Student Satisfaction</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td id="infor_sta_date">100%</td>
-                <td id="infor_deadline">100%</td>
-                <td id="infor_mode">10000$</td>
-                <td id="infor_duration">100%</td>
+                <td>
+                  {% if course.graduation_rate_percent[0] > 0.0 %}
+                    {{course.employment_rate_percent[0]}}%
+                  {%else%}
+                    No data available
+                  {%endif%}
+
+                </td>
+                <td>
+
+                  {% if course.employment_rate_percent[0] > 0.0 %}
+                    {{course.employment_rate_percent[0]}}%
+                  {%else%}
+                    No data available
+                  {%endif%}
+
+                </td>
+                <td>
+                  
+                  {% if course.salary[0]["INSTMED"] > 0.0 %}
+                    £ {{course.salary[0]["INSTMED"]}}
+                  {%else%}
+                    No data available
+                  {%endif%}
+
+                </td>
+                <td>
+                  {% if course.nss[0]["Q27"] > 0.0 %}
+                    {{course.nss[0]["Q27"]}} %
+                  {%else%}
+                    No data available
+                  {%endif%}
+
+
+                </td>
               </tr>
             </tbody>
         </table>
         </div>
+
+        {% if related_courses %}
+        <div class="panel-body" id="pro_dscri"> 
+            <h4>Related courses in 
+
+            <b>{{course.subject_description[0].title()}}</b> at 
+
+
+          <a href="/institution/{{institution.UKPRN}}">{{institution.PROVIDER_NAME.title()}}<a/>
+
+
+        </h4>
+            <ul class="list-group">
+       
+          {%for course in related_courses%}
+            <li class="list-group-item"><a href="{{url_for('course', UKPRN=course.UKPRN, KISCOURSEID=course.KISCOURSEID)}}"> {{course.TITLE}}</a></li>
+          {%endfor%}
+        </div>
+        {%endif%}
       </div>
 
 

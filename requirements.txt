@@ -4,3 +4,4 @@ pandas
 wikipedia-api
 requests
 titlecase
+wikipedia

@@ -1,78 +1,60 @@
-from flask import Flask, render_template, request, json
+from flask import Flask, render_template, request, json, redirect, url_for, abort
 from flask_pymongo import PyMongo
+
+
 from helpers import get_logo, get_wiki, rank_it
+from models import SearchClass, Institutions, Courses
+
 from copy import deepcopy
+
 import math
 from bson.json_util import dumps
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb://127.0.0.1:27017/rankit"
-mongo = PyMongo(app)
 
 @app.route('/')
-def main():
+def index():
     return render_template('index.html')
 
-@app.route('/test', methods=['POST'])
-def test():
-    list_uni = mongo.db.institutions.find()
-    #indata = request.form #incoming data
-    outdata = dumps(list_uni)
-    response = app.response_class(
-        response=json.dumps(outdata),
-        mimetype='application/json'
-    )
-    return response
+
 
 @app.route('/search', methods=['GET'])
 def search():
     if request.method == 'GET':
-        search_str = request.args['searchInput'].replace('+', ' ')
-        courses = mongo.db.courses.find({"$text": {"$search": search_str}},
-                                        limit=10)
-        unis = mongo.db.institutions.find({"$text": {"$search": search_str}},
-                                        limit=10)
-        uni_list = []
-        course_list = []
+        query = request.args.get("searchInput")
+        #hacky input sanitization
+        query = str(query.replace("<",""))
+        query = query.replace(">","")
 
-        # extract values from mongo cursor before we can use them
-        for uni in unis:
-            uni_list += [uni]
-
-        for course in courses:
-            course_list += [course]
-        for course in course_list:
-            uni = mongo.db.institutions.find_one({'UKPRN': course['UKPRN']})
-            course.update(uni)
-
-    return render_template('search_result.html', courses=course_list,
-                           unis=uni_list)
+        search_result = SearchClass().GlobalSearch(query)
+        return render_template('search_result.html', courses=search_result['courses'], unis=search_result['institutions'], search_query=query)
+    else:
+        return redirect(url_for("index"))
 
 
 @app.route('/institution/<int:UKPRN>')
 def institution(UKPRN):
-    inst = mongo.db.institutions.find_one({'UKPRN':UKPRN})
-    #logo = get_logo(inst['PROVIDER_NAME'])
-    logo = "/static/images/uoe_logo.png" #in case you exceed the limit
+    inst = Institutions().GetByPRN(UKPRN)
+    if inst == None: #fail gracefully if the institution is not found
+        abort(404)
+    logo = get_logo(inst['PROVIDER_NAME'])
+    #logo = "https://via.placeholder.com/1200x1200.png?text=InstitutionLogo" #in case you exceed the limit
     wiki = get_wiki(inst['PROVIDER_NAME'])
-    courses = mongo.db.courses.find({'UKPRN':UKPRN}, limit=7)
+    courses = Courses().GetByInstitution(UKPRN)
     return render_template('institution.html', inst=inst, courses=courses,
                            logo=logo, wiki=wiki)
 
-@app.route('/course/<PROVIDER_NAME>/<KISCOURSEID>')
-def course(PROVIDER_NAME, KISCOURSEID):
-    date = 'September, 2019'
-    deadline = '10 May 2019'
-    modes = 'Full time'
-    duration = '4 years'
-    course = mongo.db.courses.find_one({'KISCOURSEID':KISCOURSEID})
+@app.route('/course/<int:UKPRN>/<KISCOURSEID>')
+def course(UKPRN, KISCOURSEID):
+    institution = Institutions().GetByPRN(UKPRN)
+    course = Courses().GetSingleByKIS(KISCOURSEID)
+    related_courses=Courses().GetRelatedBySubject(KISCOURSEID)
+    if course == None:
+        abort(404)
     return render_template('course.html', 
                             course=course, 
-                            university_name = PROVIDER_NAME, 
-                            date=date,
-                            deadline = deadline,
-                            modes = modes,
-                            duration = duration
+                            institution=institution,
+                            related_courses=related_courses
                            )
 
 @app.route('/about')
@@ -81,7 +63,7 @@ def about():
 
 @app.route('/unis')
 def unis():
-    uni_list = mongo.db.institutions.find()
+    uni_list = Institutions().GetAll()
     return render_template('uni-list.html', uni_list = uni_list)
 
 @app.route('/rank', methods=['GET', 'POST'])
@@ -154,4 +136,4 @@ def rank():
 
 
 if __name__ == '__main__':
-	app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com")
+	app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com", debug=True)
