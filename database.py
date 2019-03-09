@@ -1,4 +1,5 @@
 from pymongo import MongoClient, TEXT
+import models
 import pandas as pd
 import csv
 

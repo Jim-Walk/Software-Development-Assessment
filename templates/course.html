@@ -11,7 +11,8 @@
           <div class='row sd_navigation'>
             <a href="/" class="sd_navigation_item" style="color:#333333"><u>Home</u></a>
             <img class="sd_navigation_item" src="/static/images/next1.png" disabled/>
-            <a href="/institution/{{institution.UKPRN}}" class="sd_navigation_item" style="color:#333333"><u>{{institution.PROVIDER_NAME.title()}}</u></a>
+            <a href="/institution/{{institution.UKPRN}}" class="sd_navigation_item" style="color:#333333"><u>
+            {%if institution.PROVIDER_NAME%}{{institution.PROVIDER_NAME.title()}}{%endif%}</u></a>
             <img class="sd_navigation_item" src="/static/images/next1.png" disabled/>
             <label class="sd_navigation_item">{{course.TITLE}}</label>
           </div>
@@ -105,8 +106,13 @@
             <b>{{course.subject_description[0].title()}}</b> at 
 
 
-          <a href="/institution/{{institution.UKPRN}}">{{institution.PROVIDER_NAME.title()}}<a/>
-
+        {%if institution.PROVIDER_NAME%}
+          <a href="/institution/{{institution.UKPRN}}">
+        {{institution.PROVIDER_NAME.title()}}
+        <a/>
+        {%else%}
+          this institution
+        {%endif%}
 
         </h4>
             <ul class="list-group">

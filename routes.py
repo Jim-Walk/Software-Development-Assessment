@@ -1,6 +1,11 @@
-from flask import Flask, render_template, request, json, redirect, url_for, abort
+from flask import Flask, render_template, request, json, redirect, url_for, abort, session
 from flask_pymongo import PyMongo
 
+from pymongo import MongoClient
+client = MongoClient()
+db = client.rankit
+
+import random
 
 from helpers import get_logo, get_wiki, rank_it
 from models import SearchClass, Institutions, Courses
@@ -27,7 +32,7 @@ def search():
         query = query.replace(">","")
 
         search_result = SearchClass().GlobalSearch(query)
-        return render_template('search_result.html', courses=search_result['courses'], unis=search_result['institutions'], search_query=query)
+        return render_template('search_result.html', results=search_result, search_query=query)
     else:
         return redirect(url_for("index"))
 
@@ -40,7 +45,7 @@ def institution(UKPRN):
     logo = get_logo(inst['PROVIDER_NAME'])
     #logo = "https://via.placeholder.com/1200x1200.png?text=InstitutionLogo" #in case you exceed the limit
     wiki = get_wiki(inst['PROVIDER_NAME'])
-    courses = Courses().GetByInstitution(UKPRN)
+    courses = Courses().GetTopPerInstitution(UKPRN)
     return render_template('institution.html', inst=inst, courses=courses,
                            logo=logo, wiki=wiki)
 
@@ -100,12 +105,16 @@ def rank():
     else:
     '''    
     # First, retrieve form options
+
     course_name = request.form['course'].replace('+', ' ')
+
     salary = int(request.form['salary'])
+    session['pref_salary'] = salary
     teach = int(request.form['teaching'])
+    session['pref_studfeedback']
 
     # compile list of courses with no missing data
-    courses = mongo.db.courses.find({"$text": {"$search": course_name}},
+    courses = db.courses.find({"$text": {"$search": course_name}},
                                     limit=50)
     course_and_uni =[]
     c_list = []
@@ -115,7 +124,7 @@ def rank():
             if not math.isnan(course['nss'][0]['Q27']):
                 c_list += [course]
     for course in c_list:
-        uni = mongo.db.institutions.find_one({'UKPRN':course['UKPRN']})
+        uni = db.institutions.find_one({'UKPRN':course['UKPRN']})
         if 'PROVIDER_NAME' in uni:
             course.update(uni)
             course_and_uni += [course]
@@ -130,10 +139,13 @@ def rank():
 
 
 
-
+@app.route('/rank', methods=['GET', 'POST'])
+def rank():
+    
 
 
 
 
 if __name__ == '__main__':
 	app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com", debug=True)
+    #print(rank())

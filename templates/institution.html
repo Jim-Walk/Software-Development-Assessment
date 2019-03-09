@@ -3,16 +3,16 @@
 {% block content %}
         
         <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
-        <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet"><br>
         <div class="container" style="padding:10px">
             <div class='row sd_navigation'> <!-- navaigation -->
               <a href="/" class="sd_navigation_item" style="color:#333333"><u>Home</u></a>
               <img class="sd_navigation_item" src="/static/images/next1.png" disabled/>
-              <label class="sd_navigation_item">University profile</label>
+              <label class="sd_navigation_item">{{inst.PROVIDER_NAME.title()}}</label>
             </div>
             <div class="row"> <!-- Name -->
               <div class="col-md text-center">
-                <p style="font-family: Open sans-serif; font-size: 35px; font-weight: bold">{{inst.PROVIDER_NAME}}</p>
+                <p style="font-family: Open sans-serif; font-size: 35px; font-weight: bold">{{inst.PROVIDER_NAME.title()}}</p>
               </div>
             </div>
             <div class="row imageCenterAlign topAlign">  <!-- about and logo -->
@@ -26,7 +26,7 @@
             </div>
             <div class="row">  <!-- 'Programme' title -->
               <div class="col-md-8">
-                <h3>Programmes</h3>
+                <h3>Top courses at {{inst.PROVIDER_NAME.title()}}:</h3>
               </div>
             </div>
             <div class="row">  <!-- Programs' list -->

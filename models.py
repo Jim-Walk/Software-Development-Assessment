@@ -1,13 +1,19 @@
 from database import *
 from pymongo import MongoClient, TEXT
 import pandas as pd
-import csv
+import csv, math
 import pprint, random
+import operator
 
 client = MongoClient()
 db = client.rankit
 
 
+def int2(var):
+	if math.isnan(var):
+		return 0
+	else:
+		return int(var)
 
 
 class Institutions(object):
@@ -17,7 +23,7 @@ class Institutions(object):
 		return self.instcol.find()
 
 	def Search(self, searchstr):
-		cursor =  self.instcol.find({'$text' : { '$search': searchstr } }).limit(10)
+		cursor =  self.instcol.find({'$text' : { '$search': searchstr } })
 		result = []
 		for doc in cursor:
 			result.append(doc)
@@ -31,15 +37,24 @@ class Institutions(object):
 		inst = self.instcol.find_one({'UKPRN':ukprn})
 		return inst["courses_ids"]
 
+
 class Courses(object):
 
 	coursecol = db.courses
 
 	def Search(self, searchstr):
-		cursor =  self.coursecol.find({'$text' : { '$search': searchstr } }).limit(10)
+		cursor =  self.coursecol.find({'$text' : { '$search': searchstr } })
 		result = []
 		for doc in cursor:
 			result.append(doc)
+		return result
+
+	def SearchByInstitution(self, searchstr, UKPRN):
+		courses = self.Search(searchstr)
+		result = []
+		for course in courses:
+			if course['UKPRN'] == UKPRN:
+				result.append(course)
 		return result
 
 	def GetSingleByKIS(self, KIS):
@@ -48,7 +63,7 @@ class Courses(object):
 
 	def GetByInstitution(self, ukprn):
 		query = {'UKPRN':ukprn}
-		cursor = self.coursecol.find(query).limit(10)
+		cursor = self.coursecol.find(query)
 		result = []
 		for doc in cursor:
 			result.append(doc)
@@ -75,8 +90,11 @@ class Courses(object):
 		random.shuffle(courses)
 		return courses[0:10]
 
-	def GetTopPerInstitution(self, UKPRN, pref_grad, pref_empl, pref_salary, pref_studfeedback):
-		return True
+	def GetTopPerInstitution(self, UKPRN):
+		courses = self.GetByInstitution(UKPRN)
+
+		courses.sort(key=lambda k: k['nss'][0]['Q27'], reverse=True)
+		return courses[0:10]
 
 
 
@@ -87,17 +105,15 @@ class SearchClass(object):
 		self.institutions = Institutions()
 
 	def GlobalSearch(self, string):
-		result = {}
-		courses_res = self.courses.Search(string)
-		instit_res = self.institutions.Search(string)
-		result["courses"] = courses_res
-		result["institutions"] = instit_res
+		result = self.institutions.Search(string)
+		for inst in result:
+			inst['courses_list'] = Courses().SearchByInstitution(string, inst['UKPRN'])
 		return result
 
 
 
 if __name__ == '__main__':
-	pprint.pprint(Courses().GetByInstitution(10007166))
-	#pprint.pprint(Institutions().GetByPRN(10007166))
+	#pprint.pprint(Courses().GetTopPerInstitution(10007166, 30, 40, 50, 40))
+	pprint.pprint(Institutions().GetByPRN(10007150))
 
 		

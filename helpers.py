@@ -16,10 +16,13 @@ def get_logo(uni_title):
     return r.json()['items'][0]['link']
 '''
 def get_logo(institution_title):
+    '''
     page = wikipedia.page(wikipedia.search(institution_title)[0])
     page.images.sort()
     return page.images[0]
-
+    '''
+    return "https://via.placeholder.com/1200x1200.png?text=InstitutionLogo"
+    
 def get_wiki(uni_title):
     wiki = wikipediaapi.Wikipedia('en')
     page = wiki.page(titlecase(uni_title))
