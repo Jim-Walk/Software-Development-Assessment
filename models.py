@@ -20,7 +20,12 @@ class Institutions(object):
 	instcol = db.institutions
 
 	def GetAll(self):
-		return self.instcol.find()
+		cursor = self.instcol.find()
+		result = []
+		for doc in cursor:
+			result.append(doc)
+		result.sort(key=operator.itemgetter('UKPRN'))
+		return result
 
 	def Search(self, searchstr):
 		cursor =  self.instcol.find({'$text' : { '$search': searchstr } })

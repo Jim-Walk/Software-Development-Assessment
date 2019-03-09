@@ -36,17 +36,28 @@
             <th class="col-md-2 text-center">Teaching excellence</th>
           </tr>
         </thead>
-        
         <tbody>
             {%for uni in uni_list %}
               {%if uni.PROVIDER_NAME|length > 0 %}
                 <tr>
                   <td class="col-md-1 text-center">{{loop.index}}</td>
                   <td class="col-md-3 text-center"><a href="/institution/{{uni.UKPRN}}">{{uni.PROVIDER_NAME}}</a></br></td>
-                  <td class="col-md-2 text-center">{{uni.graduation_rate}}%</td>
-                  <td class="col-md-2 text-center">75%</td>
-                  <td class="col-md-2 text-center">75%</td>
-                  <td class="col-md-2 text-center">75%</td>  
+                  <td class="col-md-2 text-center">
+                  {%if uni.graduation_rate_percent[0] == nan%}
+                    {{uni}}
+                  {%else%}
+
+                  {%endif%}
+
+                  </td>
+                  <td class="col-md-2 text-center">
+                  {%if uni['employment_rate_percent'][0] == nan%}
+                    {{uni.employment_rate_percent[0]}}%
+                  {%else%}
+    
+                  {%endif%}                  </td>
+                  <td class="col-md-2 text-center"></td>
+                  <td class="col-md-2 text-center"></td>  
                 </tr>
               {%endif%}  
             {%endfor%}  

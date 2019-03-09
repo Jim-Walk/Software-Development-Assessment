@@ -70,10 +70,10 @@ def about():
 def unis():
     uni_list = Institutions().GetAll()
     return render_template('uni-list.html', uni_list = uni_list)
-
+'''
 @app.route('/rank', methods=['GET', 'POST'])
 def rank():
-    '''
+    ###
     if request.method == 'GET':
         # First, retrieve form options
         department = request.args['department'].replace('+', ' ')
@@ -103,7 +103,7 @@ def rank():
         c_final = rank_it(course_and_uni, salary, teach)
     return render_template('rank.html', courses=c_final)
     else:
-    '''    
+    ###
     # First, retrieve form options
 
     course_name = request.form['course'].replace('+', ' ')
@@ -136,16 +136,22 @@ def rank():
         mimetype='application/json'
     )
     return response
-
-
+'''
 
 @app.route('/rank', methods=['GET', 'POST'])
 def rank():
+    session['pref_set'] = True
+    pref_grad = request.form['grad_rates']
+    session['pref_grad'] = pref_grad
+    pref_empl = request.form['empl_chance']
+    session['pref_empl'] = pref_empl
+    pref_salary = request.form['salary']
+    session['pref_salary'] = pref_salary
+    pref_studfeed = request.form['teaching']
+    session['pref_studfeed'] = pref_studfeed
+
+
+
     
-
-
-
-
 if __name__ == '__main__':
-	app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com", debug=True)
-    #print(rank())
+    app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com", debug=True)
