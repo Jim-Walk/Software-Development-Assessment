@@ -140,7 +140,6 @@ def rank():
 
 @app.route('/rank', methods=['GET', 'POST'])
 def rank():
-    session['pref_set'] = True
     pref_grad = request.form['grad_rates']
     session['pref_grad'] = pref_grad
     pref_empl = request.form['empl_chance']

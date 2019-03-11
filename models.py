@@ -19,6 +19,12 @@ def int2(var):
 class Institutions(object):
 	instcol = db.institutions
 
+	def GetByPRNList(self,list):
+		result = []
+		for prn in list:
+			result.append(self.GetByPRN(prn))
+		return result
+
 	def GetAll(self):
 		cursor = self.instcol.find()
 		result = []
@@ -111,14 +117,57 @@ class SearchClass(object):
 
 	def GlobalSearch(self, string):
 		result = self.institutions.Search(string)
-		for inst in result:
-			inst['courses_list'] = Courses().SearchByInstitution(string, inst['UKPRN'])
-		return result
+		if len(result) > 0:
+			for inst in result:
+				inst['courses_list'] = Courses().SearchByInstitution(string, inst['UKPRN'])
+			return result
+		else:
+			courses = Courses().Search(string)
+			ukprns = []
+			for course in courses:
+				if course['UKPRN'] not in ukprns:
+					ukprns.append(course)
+			for prn in ukprns:
+				result.append(Institutions().GetByPRN(prn))
+			for inst in result:
+				inst['courses_list'] = Courses().SearchByInstitution(string, inst['UKPRN'])
+			return result
+'''
+'''
+class RankClass(object):
+	def __init__(self, subject_code, pref_grad, pref_empl, pref_salary, pref_studfeed):
+		self.courses = Courses()
+		self.institutions = Institutions()
+		self.grad = pref_grad
+		self.empl = pref_empl
+		self.salary = pref_salary
+		self.studfeed = pref_studfeed
+		self.subject = subject_code
 
 
 
-if __name__ == '__main__':
-	#pprint.pprint(Courses().GetTopPerInstitution(10007166, 30, 40, 50, 40))
-	pprint.pprint(Institutions().GetByPRN(10007150))
-
+	def GetResult(self):
+		courses_bysubject = self.courses.GetBySubject(self.subject)
+		for idx,course in enumerate(courses_bysubject):
+			grad_pts = course['graduation_rate_percent'] * self.grad
+			empl_pts = course['employment_rate_percent'] * self.empl 
+			salary_pts = course['median_salary'] *  self.salary
+			studfeed_pts = course['studentsatisfaction_rate_percent'] * self.studfeed
+			course['tot_points'] = 	grad_pts + empl_pts + salary_pts + studfeed_pts
+			if course['tot_points'] <= 0.0:
+				courses_bysubject.pop(idx)
+		courses_bysubject.sort(key=operator.itemgetter('tot_points'))
+		institution_scores = {}
+		for idx,course in enumerate(courses_bysubject):
+			if course['UKPRN'] not in institution_scores:
+				institution_scores[course['UKPRN']] = len(courses_bysubject) - idx 
+			else:
+				institution_scores[course['UKPRN']] += len(courses_bysubject) - idx
+		ranked_prns = []
+		for key, value in sorted(institution_scores.items(), key=operator.itemgetter(1)):
+			ranked_prns.append(Institutions.GetByPRN(key))
+		return ranked_prns
 		
+if __name__ == '__main__':
+	r = RankClass('CAH01', 50, 50, 50, 50)
+	r.GetResult()
