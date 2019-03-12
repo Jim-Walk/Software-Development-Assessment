@@ -16,7 +16,7 @@ For use with python3. Install necessary packages in either the website or the cr
 
 ## Quick Start
 
-After you've installed mongodb and you're sure it's up and running, simply import the data using the import script in the db folder.
+After you've installed mongodb and you're sure it's up and running, simply import the data using the import script.
 ```
 python3 database.py
 ```
