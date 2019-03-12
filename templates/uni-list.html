@@ -31,9 +31,9 @@
             <th class="col-md-1 text-center">Rank</th>
             <th class="col-md-3 text-center">Name</th>
             <th class="col-md-2 text-center">Graduation rates</th>
-            <th class="col-md-2 text-center">Employment chances</th>
-            <th class="col-md-2 text-center">Quality of life</th>
-            <th class="col-md-2 text-center">Teaching excellence</th>
+            <th class="col-md-2 text-center">Employment Rate Post-Graduation</th>
+            <th class="col-md-2 text-center">Expected Salary (GBP)</th>
+            <th class="col-md-2 text-center">Student Feedback</th>
           </tr>
         </thead>
         <tbody>
@@ -42,22 +42,10 @@
                 <tr>
                   <td class="col-md-1 text-center">{{loop.index}}</td>
                   <td class="col-md-3 text-center"><a href="/institution/{{uni.UKPRN}}">{{uni.PROVIDER_NAME}}</a></br></td>
-                  <td class="col-md-2 text-center">
-                  {%if uni.graduation_rate_percent[0] == nan%}
-                    {{uni}}
-                  {%else%}
-
-                  {%endif%}
-
-                  </td>
-                  <td class="col-md-2 text-center">
-                  {%if uni['employment_rate_percent'][0] == nan%}
-                    {{uni.employment_rate_percent[0]}}%
-                  {%else%}
-    
-                  {%endif%}                  </td>
-                  <td class="col-md-2 text-center"></td>
-                  <td class="col-md-2 text-center"></td>  
+                  <td class="col-md-2 text-center">{{uni.graduation_rate_percent}}</td>
+                  <td class="col-md-2 text-center">{{uni.employment_rate_percent}}</td>
+                  <td class="col-md-2 text-center">{{uni.median_salary}}</td>
+                  <td class="col-md-2 text-center">{{uni.studentsatisfaction_rate_percent}}</td>  
                 </tr>
               {%endif%}  
             {%endfor%}  

@@ -1,19 +1,16 @@
 from flask import Flask, render_template, request, json, redirect, url_for, abort, session
-from flask_pymongo import PyMongo
-
 from pymongo import MongoClient
-client = MongoClient()
-db = client.rankit
 
-import random
+import random,json,math
 
 from helpers import get_logo, get_wiki, rank_it
-from models import SearchClass, Institutions, Courses
-
+from models import SearchClass, Institutions, Courses, RankClass
 from copy import deepcopy
 
-import math
 from bson.json_util import dumps
+
+client = MongoClient()
+db = client.rankit
 
 app = Flask(__name__)
 
@@ -140,17 +137,19 @@ def rank():
 
 @app.route('/rank', methods=['GET', 'POST'])
 def rank():
-    pref_grad = request.form['grad_rates']
-    session['pref_grad'] = pref_grad
-    pref_empl = request.form['empl_chance']
-    session['pref_empl'] = pref_empl
-    pref_salary = request.form['salary']
-    session['pref_salary'] = pref_salary
-    pref_studfeed = request.form['teaching']
-    session['pref_studfeed'] = pref_studfeed
+    pref_grad = int(request.form['grad_rates'])
+    pref_empl = int(request.form['empl_chance'])
+    pref_salary = int(request.form['salary'])
+    pref_studfeed = int(request.form['teaching'])
+    rank = RankClass(request.form['department'], pref_grad, pref_empl, pref_salary, pref_studfeed)
+    outdata = dumps(rank.GetResult())
+    response = app.response_class(
+        response=json.dumps(outdata),
+        mimetype='application/json'
+    )
+    return response  
 
 
 
-    
 if __name__ == '__main__':
-    app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com", debug=True)
+    app.run(debug=True)

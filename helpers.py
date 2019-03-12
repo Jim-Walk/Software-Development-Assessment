@@ -21,7 +21,7 @@ def get_logo(institution_title):
     page.images.sort()
     return page.images[0]
     '''
-    return "https://via.placeholder.com/1200x1200.png?text=InstitutionLogo"
+    return "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/University_of_Edinburgh_ceremonial_roundel.svg/1024px-University_of_Edinburgh_ceremonial_roundel.svg.png"
     
 def get_wiki(uni_title):
     wiki = wikipediaapi.Wikipedia('en')
