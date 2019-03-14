@@ -8,19 +8,17 @@ client = MongoClient()
 db = client.rankit
 
 
+
+
 class Institutions(object):
 	instcol = db.institutions
+
 
 	def GetByPRNList(self,list): #Get a list of institutions from a list of PRNs
 		result = []
 		for prn in list:
 			result.append(self.GetByPRN(prn))
 		return result
-
-	def GetAllNoNan(self):
-		unis = self.GetAll()
-		unis_clean = [x for x in unis if str(x) != 'nan']
-		return unis_clean
 
 	def GetAll(self):# Get All institutions as a list.
 		cursor = self.instcol.find()
@@ -86,9 +84,7 @@ class Courses(object):
 		return result
 
 	def GetBySubject(self, cah_code): #Get all courses from a given subject, by CAH(subject) code. See data/CAH.csv for cah code descriptions
-		query = {'subject_cah':cah_code}
-
-		cursor = self.coursecol.find(query).sort('UKPRN', 1)
+		cursor = self.coursecol.find({'subject_cah':cah_code})
 		result = []
 		for doc in cursor:
 			result.append(doc)	
@@ -156,8 +152,11 @@ class RankClass(object):
 		salaries = []
 		#compute max a min salaries from the courses, to normalize each course's salary
 		for course in courses_bysubject:
-			salaries.append(course['median_salary'])
-		return(salaries)
+			if 'median_salary' in course and (math.isnan(course['median_salary']) == False):
+				salaries.append(course['median_salary'])
+			if ('median_salary' not in course) or ('graduation_rate_percent' not in course) or ('employment_rate_percent' not in course) or ('studentsatisfaction_rate_percent' not in course):
+				courses_bysubject.remove(course)
+
 		salary_min = min(salaries)
 		salary_range = max(salaries) - salary_min
 		#iterate over courses
@@ -189,4 +188,5 @@ class RankClass(object):
 		return ranked_prns
 
 if __name__ == '__main__':
-	pprint.pprint(Courses().GetAll())
+    rank = RankClass('CAH07', 50, 50, 50, 50)
+    pprint.pprint(rank.GetResult())
