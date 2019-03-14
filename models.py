@@ -87,6 +87,8 @@ class Courses(object):
 		cursor = self.coursecol.find({'subject_cah':cah_code})
 		result = []
 		for doc in cursor:
+			if ('UKPRN' not in doc) or ('median_salary' not in doc) or ('graduation_rate_percent' not in doc) or ('employment_rate_percent' not in doc) or ('studentsatisfaction_rate_percent' not in doc):
+				continue
 			result.append(doc)	
 		return result
 
@@ -171,10 +173,12 @@ class RankClass(object):
 			studfeed_pts = int(course['studentsatisfaction_rate_percent'] * self.studfeed)
 			if (grad_pts <= 0.0) or (empl_pts <= 0.0) or (salary_pts <= 0.0) or (studfeed_pts <= 0.0):
 				#remove the course if any of the points yields zero, arbitrary but to be improved
-				courses_bysubject.pop(idx)
+				courses_bysubject.remove(course)
+				continue
 			#add the points to the course dict
-			course['tot_points'] = 	grad_pts + empl_pts + salary_pts + studfeed_pts
-		courses_bysubject.sort(key=operator.itemgetter('tot_points'))
+			totpts = grad_pts + empl_pts + salary_pts + studfeed_pts
+			courses_bysubject[idx]['tot_points'] = totpts
+		courses_bysubject.sort(key = lambda i: i['graduation_rate_percent'],reverse=True)
 		institution_scores = {} #group individual course scores by institutions (by UKPRNs)
 		for idx,course in enumerate(courses_bysubject):
 			if course['UKPRN'] not in institution_scores:
@@ -184,9 +188,9 @@ class RankClass(object):
 		ranked_prns = []
 		for key, value in sorted(institution_scores.items(), key=operator.itemgetter(1), reverse=True):
 			#iterate over the institution scores dict, by value (=the total points obtained)
-			ranked_prns.append(Institutions.GetByPRN(key)) #append the final "leaderboard" to the list, index of the list determining the index
+			ranked_prns.append(Institutions().GetByPRN(key)) #append the final "leaderboard" to the list, index of the list determining the index
 		return ranked_prns
 
 if __name__ == '__main__':
     rank = RankClass('CAH07', 50, 50, 50, 50)
-    pprint.pprint(rank.GetResult())
+    pprint.pprint(rank.GetResult()[0])
