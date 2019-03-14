@@ -65,7 +65,7 @@ def about():
 
 @app.route('/unis')
 def unis():
-    uni_list = Institutions().GetAll()
+    uni_list = Institutions().GetAllNoNan()
     return render_template('uni-list.html', uni_list = uni_list)
 '''
 @app.route('/rank', methods=['GET', 'POST'])

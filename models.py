@@ -2,6 +2,7 @@ from database import *
 from pymongo import MongoClient, TEXT
 import pandas as pd
 import csv, math, pprint, random, operator
+import database
 
 client = MongoClient()
 db = client.rankit
@@ -15,6 +16,11 @@ class Institutions(object):
 		for prn in list:
 			result.append(self.GetByPRN(prn))
 		return result
+
+	def GetAllNoNan(self):
+		unis = self.GetAll()
+		unis_clean = [x for x in unis if str(x) != 'nan']
+		return unis_clean
 
 	def GetAll(self):# Get All institutions as a list.
 		cursor = self.instcol.find()
@@ -62,8 +68,9 @@ class Courses(object):
 		courses = self.Search(searchstr)
 		result = []
 		for course in courses:
-			if course['UKPRN'] == UKPRN:
-				result.append(course)
+			if 'UKPRN' in course:
+				if course['UKPRN'] == UKPRN:
+					result.append(course)
 		return result
 
 	def GetSingleByKIS(self, KIS): #Get a single course by it's KISCOUSEID, as a dict
@@ -180,3 +187,6 @@ class RankClass(object):
 			#iterate over the institution scores dict, by value (=the total points obtained)
 			ranked_prns.append(Institutions.GetByPRN(key)) #append the final "leaderboard" to the list, index of the list determining the index
 		return ranked_prns
+
+if __name__ == '__main__':
+	pprint.pprint(Courses().GetAll())

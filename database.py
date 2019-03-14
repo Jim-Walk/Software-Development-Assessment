@@ -1,7 +1,6 @@
 from pymongo import MongoClient, TEXT
 import pandas as pd
-import csv, math
-
+import csv, math, pprint
 client = MongoClient()
 db = client.rankit
 
@@ -25,15 +24,18 @@ class Database(object):
 		self.ImportInstitutions()
 		self.ImportCourses()
 		self.ImportLocations()
-		'''
+		
 		self.ImportNSS()
 		
 		self.ImportSalary()
+		
 		self.ImportGraduationRates()
+		
+		
 		self.ImportEmploymentRates()
-		
+
 		self.ComputeGraduationEmploymentRates()
-		
+'''		
 		self.AssignSubjects()
 
 	def ImportInstitutions(self):
@@ -128,7 +130,7 @@ class Database(object):
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' graduation rates')
 			entry = row.to_dict()
-			if math.isnan(entry['UPASS']) or entry['UPASS'] == 0.0:
+			if math.isnan(entry['UPASS']):
 				continue
 			kiscourseid = entry["KISCOURSEID"]
 			self.courses.update({'KISCOURSEID':kiscourseid},{ '$set':  { 'graduation_rate_percent': entry["UPASS"]} }, upsert=True )
@@ -181,23 +183,29 @@ class Database(object):
 		for row in reader:
 			k, v = row
 			lookup[k] = v
-
+		print("dddd")
 		reader = csv.reader(open('./data/SBJ.csv', 'r'))
 		cah_courses = {}
 		for row in reader:
 			k, v = row
 			cah_courses[k] = v
 
-		courses = self.courses.find()
+		courses = []
 
-		for idx,doc in enumerate(courses):
-			if idx%1000 == 0:
-					print(str(idx)+' out of '+str(courses.count()) + 'courses have been assigned a subject')
-			kiscourseid = doc["KISCOURSEID"]
+		for doc in db.courses.find():
+			courses.append(doc)
+
+		for x in courses:
+
+			if 'KISCOURSEID' not in x:
+				db.courses.delete_one({'_id':x['_id']})
+				courses.remove(x)
+				continue
+			kiscourseid = x['KISCOURSEID']
 			subject_cah = cah_courses[kiscourseid]
 			subject_description = lookup[subject_cah]
-			self.courses.update({"KISCOURSEID": kiscourseid},{ '$set':  {'subject_cah' : subject_cah} }, upsert=True)
-			self.courses.update({"KISCOURSEID": kiscourseid},{ '$set':  {'subject_description' : subject_description} }, upsert=True)
+			self.courses.update({'KISCOURSEID': kiscourseid},{ '$set':  {'subject_cah' : subject_cah} }, upsert=True)
+			self.courses.update({'KISCOURSEID': kiscourseid},{ '$set':  {'subject_description' : subject_description} }, upsert=True)
 
 
 
