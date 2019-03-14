@@ -20,8 +20,7 @@ class Institutions(object):
 		cursor = self.instcol.find()
 		result = []
 		for doc in cursor:
-			if 
-				result.append(doc)
+			result.append(doc)
 		result.sort(key=operator.itemgetter('UKPRN'))
 		return result
 
@@ -44,6 +43,13 @@ class Institutions(object):
 class Courses(object):
 
 	coursecol = db.courses
+
+	def GetAll(self):
+		cursor = self.coursecol.find()
+		result = []
+		for doc in cursor:
+			result.append(doc)
+		return result
 
 	def Search(self, searchstr): #Search courses by query string, returns a list of courses(Dicts)
 		cursor =  self.coursecol.find({'$text' : { '$search': searchstr } })
@@ -149,7 +155,7 @@ class RankClass(object):
 		salary_range = max(salaries) - salary_min
 		#iterate over courses
 		for idx,course in enumerate(courses_bysubject):
-			if not math.isnan(course['graduation_rate_percent']) or not math.isnan(course['employment_rate_percent']) or not math.isnan(course['median_salary']) or not math.isnan(course['studentsatisfaction_rate_percent']):
+			if math.isnan(course['graduation_rate_percent']) or math.isnan(course['employment_rate_percent']) or math.isnan(course['median_salary']) or math.isnan(course['studentsatisfaction_rate_percent']):
 					#if any of the criteria is not a number, skip the course
 					continue
 			grad_pts = int(course['graduation_rate_percent'] * self.grad)
@@ -157,7 +163,7 @@ class RankClass(object):
 			normal_salary = int(((course['median_salary']) - salary_min) / salary_range)
 			salary_pts = int(normal_salary *  self.salary)
 			studfeed_pts = int(course['studentsatisfaction_rate_percent'] * self.studfeed)
-			if grad_pts <= 0.0, or empl_pts <= 0.0 or salary_pts <= 0.0 or studfeed_pts <= 0.0:
+			if (grad_pts <= 0.0) or (empl_pts <= 0.0) or (salary_pts <= 0.0) or (studfeed_pts <= 0.0):
 				#remove the course if any of the points yields zero, arbitrary but to be improved
 				courses_bysubject.pop(idx)
 			#add the points to the course dict
@@ -174,4 +180,3 @@ class RankClass(object):
 			#iterate over the institution scores dict, by value (=the total points obtained)
 			ranked_prns.append(Institutions.GetByPRN(key)) #append the final "leaderboard" to the list, index of the list determining the index
 		return ranked_prns
-		

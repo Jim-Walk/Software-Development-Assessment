@@ -21,12 +21,13 @@ class Database(object):
 		else:
 			print("Abort")
 	def Bootstrap(self):
-		
+		'''
 		self.ImportInstitutions()
 		self.ImportCourses()
 		self.ImportLocations()
-		
+		'''
 		self.ImportNSS()
+		
 		self.ImportSalary()
 		self.ImportGraduationRates()
 		self.ImportEmploymentRates()
@@ -76,7 +77,7 @@ class Database(object):
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' NSS entries')
 			entry = row.to_dict()
-			if not math.isnan(entry['Q27']) or entry['Q27'] == 0.0:
+			if math.isnan(entry['Q27']) or entry['Q27'] == 0.0:
 				continue
 			kiscourseid = entry["KISCOURSEID"]
 			entry.pop('PUBUKPRN')
@@ -84,7 +85,7 @@ class Database(object):
 			entry.pop('KISCOURSEID')
 			entry.pop('KISMODE')
 			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'nss': entry} }, upsert=True )
-			self.courses.update({'KISCOURSEID':kiscourseid}, { 'studentsatisfaction_rate_percent': entry['Q27']}, upsert=True )
+			self.courses.update({'KISCOURSEID':kiscourseid}, { '$set': {'studentsatisfaction_rate_percent': entry['Q27']}}, upsert=True )
 		self.courses.create_index([('$**', 'text')])
 		'''
 		df = pd.read_csv('./data/NHSNSS.csv')
@@ -109,7 +110,7 @@ class Database(object):
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' salaries')
 			entry = row.to_dict()
-			if not math.isnan(entry['INSTMED']) or entry['INSTMED'] == 0.0:
+			if math.isnan(entry['INSTMED']) or entry['INSTMED'] == 0.0:
 				continue
 			kiscourseid = entry["KISCOURSEID"]
 			entry.pop('PUBUKPRN')
@@ -127,7 +128,7 @@ class Database(object):
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' graduation rates')
 			entry = row.to_dict()
-			if not math.isnan(entry['UPASS']) or entry['UPASS'] == 0.0:
+			if math.isnan(entry['UPASS']) or entry['UPASS'] == 0.0:
 				continue
 			kiscourseid = entry["KISCOURSEID"]
 			self.courses.update({'KISCOURSEID':kiscourseid},{ '$set':  { 'graduation_rate_percent': entry["UPASS"]} }, upsert=True )
@@ -140,7 +141,7 @@ class Database(object):
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' employment rates')
 			entry = row.to_dict()
-			if not math.isnan(entry['WORKSTUDY']) or entry['WORKSTUDY'] == 0.0:
+			if math.isnan(entry['WORKSTUDY']) or entry['WORKSTUDY'] == 0.0:
 				continue
 			kiscourseid = entry["KISCOURSEID"]
 			self.courses.update({'KISCOURSEID':kiscourseid},{ '$set':  { 'employment_rate_percent': entry["WORKSTUDY"]}}, upsert=True )
@@ -155,8 +156,8 @@ class Database(object):
 					print(str(idx)+' out of '+str(institutions.count()) + 'institution rates computed')
 			prn = institution["UKPRN"]
 			for course in self.courses.find({'UKPRN':prn}):
-				values_employment.append(sum(course['employment_rate_percent'])/len(course['employment_rate_percent']))
-				values_graduation.append(sum(course['graduation_rate_percent'])/len(course['graduation_rate_percent']))
+				values_employment.append(course['employment_rate_percent'])
+				values_graduation.append(course['graduation_rate_percent'])
 			
 			if len(values_graduation) > 0:
 				institution_gradrate = (sum(values_graduation)/len(values_graduation))
@@ -202,5 +203,5 @@ class Database(object):
 
 if __name__ == '__main__':
     d = Database()
-    d.DropDB()
+    #d.DropDB()
     d.Bootstrap()

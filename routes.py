@@ -152,4 +152,4 @@ def rank():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com", port=80, debug=True)
