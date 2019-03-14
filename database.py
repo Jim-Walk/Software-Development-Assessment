@@ -2,6 +2,7 @@ from pymongo import MongoClient, TEXT
 import pandas as pd
 import csv, math
 import sys
+from tqdm import tqdm #status bar
 
 client = MongoClient()
 db = client.rankit
@@ -40,7 +41,7 @@ class Database(object):
         print('Importing Institutions...')
         self.institutions.create_index([('$**', 'text')])
         df = pd.read_csv('./data/learning-providers.csv')
-        for index,row in df.iterrows():
+        for index,row in tqdm(df.iterrows()):
             entry = row.to_dict()
             entry['courses_ids'] = []
             entry['locations'] = []
@@ -51,9 +52,7 @@ class Database(object):
     def ImportCourses(self, max_import):
         print('Importing Courses...')
         df = pd.read_csv('./data/KISCOURSE.csv', low_memory=False)
-        for index,row in df.iterrows():
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' courses')
+        for index,row in tqdm(df.iterrows()):
             entry = row.to_dict()
             ukprn = entry['UKPRN']
             kiscourseid = entry['KISCOURSEID']
@@ -64,11 +63,9 @@ class Database(object):
         self.courses.create_index([('$**', 'text')])
 
     def ImportLocations(self, max_import):
-        df = pd.read_csv('./data/LOCATION.csv')
         print('Importing Locations')
-        for index,row in df.iterrows():
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' locations')
+        df = pd.read_csv('./data/LOCATION.csv')
+        for index,row in tqdm(df.iterrows()):
             entry = row.to_dict()
             ukprn = entry['UKPRN']
             entry.pop('UKPRN')
@@ -78,11 +75,9 @@ class Database(object):
         self.institutions.create_index([('$**', 'text')])
 
     def ImportNSS(self, max_import):
-        df = pd.read_csv('./data/NSS.csv')
         print('Importing NSS')
-        for index,row in df.iterrows():
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' NSS entries')
+        df = pd.read_csv('./data/NSS.csv')
+        for index,row in tqdm(df.iterrows()):
             entry = row.to_dict()
             if math.isnan(entry['Q27']) or entry['Q27'] == 0.0:
                 continue
@@ -113,12 +108,12 @@ class Database(object):
         '''
 
     def ImportSalary(self, max_import):
-        df = pd.read_csv('./data/SALARY.csv')
         print('Importing Salary')
-        for index,row in df.iterrows():
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' salaries')
+        df = pd.read_csv('./data/SALARY.csv')
+        for index,row in tqdm(df.iterrows()):
             entry = row.to_dict()
+            if index == max_import:
+                break
             if math.isnan(entry['INSTMED']) or entry['INSTMED'] == 0.0:
                 continue
             kiscourseid = entry["KISCOURSEID"]
@@ -130,48 +125,42 @@ class Database(object):
             if 'Q27' in entry and 'INSTMED' in entry:
                 self.courses.update({'KISCOURSEID':kiscourseid},{ '$set': { 'median_salary': entry['INSTMED']}}, upsert=True )
                 self.courses.update({'KISCOURSEID':kiscourseid}, { '$set': {'studentsatisfaction_rate_percent': entry['Q27']}}, upsert=True )
-            if index == max_import:
-                break
         self.courses.create_index([('$**', 'text')])
 
     def ImportGraduationRates(self, max_import):
         df = pd.read_csv('./data/DEGREECLASS.csv')
         print("Adding Graduation Rate")
-        for index,row in df.iterrows():
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' graduation rates')
+        for index,row in tqdm(df.iterrows()):
             entry = row.to_dict()
+            if index == max_import:
+                break
             if math.isnan(entry['UPASS']) or entry['UPASS'] == 0.0:
                 continue
             kiscourseid = entry["KISCOURSEID"]
             self.courses.update({'KISCOURSEID':kiscourseid},{ '$set':  { 'graduation_rate_percent': entry["UPASS"]} }, upsert=True )
-            if index == max_import:
-                break
 
 
     def ImportEmploymentRates(self, max_import):
-        df = pd.read_csv('./data/EMPLOYMENT.csv')
         print("Adding Employment Rates 6M post-graduation")
-        for index,row in df.iterrows():
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' employment rates')
+        df = pd.read_csv('./data/EMPLOYMENT.csv')
+        for index,row in tqdm(df.iterrows()):
             entry = row.to_dict()
+            if index == max_import:
+                break
             if math.isnan(entry['WORKSTUDY']) or entry['WORKSTUDY'] == 0.0:
                 continue
             kiscourseid = entry["KISCOURSEID"]
             self.courses.update({'KISCOURSEID':kiscourseid},{ '$set':  { 'employment_rate_percent': entry["WORKSTUDY"]}}, upsert=True )
-            if index == max_import:
-                break
 
     def ComputeGraduationEmploymentRates(self, max_import):
+        print("computing graduation rates")
         institutions = self.institutions.find()
         values_employment = []
         values_graduation = []
-        print("computing graduation rates")
-        for index,institution in enumerate(institutions):
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(institutions.count()) + 'institution rates computed')
+        for index,institution in tqdm(enumerate(institutions)):
             prn = institution["UKPRN"]
+            if index == max_import:
+                break
             for course in self.courses.find({'UKPRN':prn}):
                 if('employment_rate_percent' in course and
                    'graduation_rate_percent' in course):
@@ -187,8 +176,6 @@ class Database(object):
                 institution_emprate = (sum(values_employment)/len(values_employment))
             else:
                 institution_emprate = None
-            if index == max_import:
-                break
             self.institutions.update({'UKPRN':prn},{ '$set':  { 'employment_rate_percent': institution_emprate}}, upsert=True  )
             self.institutions.update({'UKPRN':prn},{ '$set':  { 'graduation_rate_percent': institution_gradrate}}, upsert=True  )
             values_employment.clear()
@@ -211,9 +198,7 @@ class Database(object):
 
         courses = self.courses.find()
 
-        for index,doc in enumerate(courses):
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(courses.count()) + 'courses have been assigned a subject')
+        for index,doc in tqdm(enumerate(courses)):
             kiscourseid = doc["KISCOURSEID"]
             subject_cah = cah_courses[kiscourseid]
             subject_description = lookup[subject_cah]
@@ -231,5 +216,5 @@ if __name__ == '__main__':
         max_import = int(sys.argv[1])
         d.Bootstrap(max_import)
     else:
-        print('Importing all courses')
+        print('WARNING: Importing all courses. This will take at least half an hour')
         d.Bootstrap(-1)
