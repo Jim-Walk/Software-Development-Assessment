@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block title %}Rank it{% endblock %}
+{% block content %}
+
+<script src="{{ url_for('static',filename='js/my.js') }}"></script>
+
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+<link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static',filename='css/dataTables.bootstrap.min.css') }}" rel="stylesheet"> 
+
+<link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
+
+<div class="starter-template">
+  <h1>Rank it!</h1>
+  <p class="lead">A research tool for prospective university students</p>
+</div>
+
+<form id="rank-form" action="" class="container ">
+  <div class="row"> <!-- inputs and selects -->
+      <div class="form-group col-md-3">
+          <label for="studyLevelSelect">Study Level</label>
+          <select name="study" class="form-control" id="studyLevelSelect">
+                  <option>Undergraduate</option>
+                  <option>Postgraduate</option>
+          </select>        
+      </div>
+      <div class="form-group col-md-3 ">
+          <label for="regionSelect">Region</label>
+          <select name="region" class="form-control" id="regionSelect">
+                  <option>Worldwide</option>
+                  <option>UK</option>
+          </select> 
+      </div>
+      <div class="form-group col-md-3 ">
+          <label for="departmentSelect">Department</label> 
+          <!--input name="course" type="text" placeholder="type course name" class="form-control" required-->
+          <select name="department" class="form-control" id="departmentSelect">
+            <option value='CAH01'>Medicine and Dentistry</option>
+            <option value='CAH02'>Subjects allied to medicine</option>
+            <option value='CAH03'>Biological and Sport sciences</option>
+            <option value='CAH04'>Psychology</option>
+            <option value='CAH05'>Veterinary sciences</option>
+            <option value='CAH06'>Agriculture, food and related studies</option>
+            <option value='CAH07'>Physical sciences</option>
+            <option value='CAH08'>General and others in sciences</option>
+            <option value='CAH09'>Mathematical sciences</option>
+            <option value='CAH10'>Engineering and Technology</option>
+            <option value='CAH11'>Computing</option>
+            <option value='CAH12'>Geographical and Environmental studies</option>
+            <option value='CAH13'>Architecture, Building and Planning</option>
+            <option value='CAH14'>Humanities and Liberal arts</option>
+            <option value='CAH15'>Social sciences</option>
+            <option value='CAH16'>Law</option>
+            <option value='CAH17'>Business and Management</option>
+            <option value='CAH18'>Communications and Media</option>
+            <option value='CAH19'>Language and Area studies</option>
+            <option value='CAH20'>Historical, philosophical and religious studies</option>
+            <option value='CAH21'>Creative arts and Design</option>
+            <option value='CAH22'>Education and Teaching</option>
+            <option value='CAH23'>Combined and General studies</option>
+        </select>
+      </div>
+      <div class="form-group col-md-3 ">
+          <label for="yearSelect">Year</label>
+          <select name="year" class="form-control" id="yearSelect">
+                  <option>2018</option>
+                  <option>2017</option>
+          </select>
+      </div>
+  </div>
+
+  <div class="row "> <!-- sliders -->
+      <div class="form-group col-md-3">
+          <label>Graduation rates</label>
+          <input name='grad_rates' type="range" min="1" max="100" value="50" class="slider" id="studyLevelRange">
+          <label id="sliderval1">50</label>        
+      </div>
+      <div class="form-group col-md-3">
+          <label>Employment chance</label>
+          <input name='empl_chance' type="range" min="1" max="100" value="50" class="slider" id="employmentChanceRange">
+          <label id="sliderval2"></label>        
+      </div>
+      <div class="form-group col-md-3">
+          <label>Salary</label>
+          <input name='salary' type="range" min="1" max="100" value="50" class="slider" id="salaryOfLifeRange">
+          <label id="sliderval3"></label>        
+      </div>
+      <div class="form-group col-md-3">
+          <label>Teaching excellence</label>
+          <input name='teaching' type="range" min="1" max="100" value="50" class="slider" id="teachingExcellenceRange">
+          <label id="sliderval4"></label>        
+      </div>
+  </div>
+
+  <div class="row"> <!-- submit button -->
+      <div class="text-center">  
+        <input type="submit" class="btn btn-default" value="Rank submit">
+      </div>
+  </div>
+</form>
+
+<div class="container sd-table" style="visibility:hidden; margin-top: 20px"> 
+</div>
+<div class="modal"><!-- Place at bottom of page --></div>
+<script>
+    var slider1 = document.getElementById("studyLevelRange");
+    var output1 = document.getElementById("sliderval1");
+    output1.innerHTML = slider1.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider1.oninput = function() {
+    output1.innerHTML = this.value;
+    }
+
+    var slider2 = document.getElementById("employmentChanceRange");
+    var output2 = document.getElementById("sliderval2");
+    output2.innerHTML = slider2.value; 
+    slider2.oninput = function() {
+    output2.innerHTML = this.value;
+    }
+
+    var slider3 = document.getElementById("salaryOfLifeRange");
+    var output3 = document.getElementById("sliderval3");
+    output3.innerHTML = slider3.value; 
+    slider3.oninput = function() {
+    output3.innerHTML = this.value;
+    }
+
+    var slider4 = document.getElementById("teachingExcellenceRange");
+    var output4 = document.getElementById("sliderval4");
+    output4.innerHTML = slider4.value; 
+    slider4.oninput = function() {
+    output4.innerHTML = this.value;
+    }
+
+    var table_header = "<table id='example' class='table table-hover table-bordered table-striped' style=width:100%; visibility:hidden; margin-top: 20px'>"
+                        +"<thead>"
+                          +"<tr>"
+                              +"<th class='col-md-1 text-center'>Rank</th>"
+                              +"<th class='col-md-3 text-center'>Name</th>"
+                              +"<th class='col-md-2 text-center'>Graduation rates</th>"
+                              +"<th class='col-md-2 text-center'>Salary</th>"
+                              +"<th class='col-md-2 text-center'>Teaching excellence</th>"
+                          +"</tr>"
+                        +"</thead>"
+                        +"<tbody>"; 
+    var table_footer = "</tbody></table>";
+
+    function set_invisible(){
+      $(".sd-table").css({"visibility":"hidden"});
+    }
+    function set_visible(){
+      $(".sd-table").css({"visibility":"visible"});
+    }
+    function add_table(table){
+      $(".sd-table").html(table);
+      $('#example').DataTable();
+    }
+    function new_row(rank, PROVIDER_NAME, UKPRN, title, grad_rates, salary, teaching){
+      var html = "<tr>"+
+                "<td class='col-md-1 text-center'>"+rank+"</td>"+
+                "<td class='col-md-3 text-center'>"+"<a href='/institution/"+UKPRN+"'>"+PROVIDER_NAME+"<br>"+title+"</a></td>"+
+                "<td class='col-md-2 text-center'>"+grad_rates+"%"+"</td>"+
+                "<td class='col-md-2 text-center'>"+salary+"$"+"</td>"+
+                "<td class='col-md-2 text-center'>"+teaching+"%"+"</td>"+  
+                "</tr>";          
+      return html;  
+    }
+    $(function () {
+        $("#rank-form").submit('click', function (event) {
+            formdata = $('form').serialize();
+            event.preventDefault();// using this page stop being refreshing 
+            $.ajax({
+                type: 'POST',
+                url: '/rank',
+                data: formdata,
+                success: function (msg) {
+                  msg = msg.replace(/NaN/g, 'null');
+                  var json = $.parseJSON(msg);
+                  console.log(json);
+                  var table_rows = "";
+                  for(let i = 0; i < json.length; i++){
+                    if(typeof json[i].PROVIDER_NAME !== 'undefined'){
+                      table_rows = table_rows + new_row(
+                                                /*rank*/  i+1, 
+                                                          json[i].PROVIDER_NAME, 
+                                                          json[i].UKPRN, 
+                                                          json[i].TITLE, 
+                                          /*grad rates*/  100, 
+                                              /*salary*/  json[i]['salary'][0].MED, 
+                                            /*teaching*/  json[i]['nss'][0].Q27
+                                                        );
+                    }
+                  }
+                  var table = table_header+table_rows+table_footer;
+                  add_table(table);
+                  set_visible();
+                }
+            });
+        });
+      });
+
+$body = $("body");
+$(document).on({
+    ajaxStart: function() { $body.addClass("loading");    },
+     ajaxStop: function() { $body.removeClass("loading"); }    
+});
+</script>   
+
+{% endblock %}
