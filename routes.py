@@ -43,9 +43,11 @@ def institution(UKPRN):
     logo = get_logo(inst['PROVIDER_NAME'])
     #logo = "https://via.placeholder.com/1200x1200.png?text=InstitutionLogo" #in case you exceed the limit
     wiki = get_wiki(inst['PROVIDER_NAME'])
-    courses = Courses().GetTopPerInstitution(UKPRN)
-    return render_template('institution.html', inst=inst, courses=courses,
-                           logo=logo, wiki=wiki)
+    courses = Courses()
+    top_courses = courses.GetTopPerInstitution(UKPRN)
+    all_courses = courses.GetByInstitution(UKPRN)
+    return render_template('institution.html', inst=inst, top_courses=top_courses,
+                           logo=logo, wiki=wiki, all_courses=all_courses)
 
 @app.route('/course/<int:UKPRN>/<KISCOURSEID>')
 def course(UKPRN, KISCOURSEID):

@@ -89,7 +89,7 @@ class Courses(object):
 		for doc in cursor:
 			if ('UKPRN' not in doc) or ('median_salary' not in doc) or ('graduation_rate_percent' not in doc) or ('employment_rate_percent' not in doc) or ('studentsatisfaction_rate_percent' not in doc):
 				continue
-			result.append(doc)	
+			result.append(doc)
 		return result
 
 	def GetRelatedBySubject(self, KIS): #get a list of courses, related to a given course by KISCOURSEID, in the same institution as the root (passed to this function) course

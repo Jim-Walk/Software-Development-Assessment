@@ -2,8 +2,12 @@
 {% block title %}Rank it{% endblock %}
 {% block content %}
         
+<script src="{{ url_for('static',filename='js/my.js') }}"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
         <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet"><br>
+        <link href="{{ url_for('static',filename='css/dataTables.bootstrap.min.css') }}" rel="stylesheet"> 
         <div class="container" style="padding:10px">
             <div class='row sd_navigation'> <!-- navaigation -->
               <a href="/" class="sd_navigation_item" style="color:#333333"><u>Home</u></a>
@@ -32,8 +36,8 @@
             <div class="row">  <!-- Programs' list -->
                 <div class="col-md-6">
                     <ul style="padding-right:-20px">
-                    {% if courses %}
-                    {% for c in courses %}
+                    {% if top_courses %}
+                    {% for c in top_courses %}
                       <li><a style="font-family:sans-serif; font-size: 20px" href="/course/{{inst.UKPRN}}/{{c.KISCOURSEID}}">{{c.TITLE}}</a></li>
                     {% endfor %}
                     {% else %}
@@ -53,5 +57,38 @@
                 </div --> 
             </div>  
         </div>
+<div class="starter-template" hidden>
+        <h1>list of universities</h1>
+        <p class="lead">
+        </p>
+        <input type="button" value="get universities">
+        <input type="submit" value="get">
+</div>
+        <div class="container">
+            <h3> All Courses at this Institution </h3>
+            <table id="example" class="table table-hover table-bordered table-striped" style="width:100%">
+                <thead>
+                  <tr>
+                    <th class="col-md-3 text-center">Name</th>
+                    <th class="col-md-3 text-center">Graduation Rate</th>
+                    <th class="col-md-3 text-center">Employment Rate</th>
+                    <th class="col-md-3 text-center">Salary</th>
+                    <th class="col-md-3 text-center">Teaching Excellence</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                    {%for c in all_courses %}
+                        <tr>
+                            <td class="col-md-3 text-center"><a href="/courses/{{inst.UKPRN}}/{{c.KISCOURSEID}}">{{c.TITLE}}</a></br></td>
+                            <td class="col-md-3 text-center">{{c.graduation_rate_percent}}</br></td>
+                            <td class="col-md-3 text-center">{{c.employment_rate_percent}}</br></td>
+                            <td class="col-md-3 text-center">{{c.median_salary}}</br></td>
+                            <td class="col-md-3 text-center">{{c.nss.0.Q27}}</br></td>
+                        </tr>
+                    {%endfor%}  
+                </tbody>
+            </table>   
+        </div>
 
-      {% endblock %}
+{% endblock %}
