@@ -49,8 +49,6 @@ class Database(object):
         print('Importing Courses...')
         df = pd.read_csv('./data/KISCOURSE.csv', low_memory=False)
         for index,row in tqdm(df.iterrows()):
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' courses')
             entry = row.to_dict()
             ukprn = entry['UKPRN']
             kiscourseid = entry['KISCOURSEID']
@@ -64,8 +62,6 @@ class Database(object):
         df = pd.read_csv('./data/LOCATION.csv')
         print('Importing Locations')
         for index,row in tqdm(df.iterrows()):
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' locations')
             entry = row.to_dict()
             ukprn = entry['UKPRN']
             entry.pop('UKPRN')
@@ -80,8 +76,6 @@ class Database(object):
         for index,row in tqdm(df.iterrows()):
         	if index == max_import:
         		break
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' NSS entries')
             entry = row.to_dict()
             if math.isnan(entry['Q27']) or entry['Q27'] == 0.0:
                 continue
@@ -117,8 +111,6 @@ class Database(object):
         for index,row in tqdm(df.iterrows()):
             if index == max_import:
                 break
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' salaries')
             entry = row.to_dict()
             if math.isnan(entry['INSTMED']) or entry['INSTMED'] == 0.0:
                 continue
@@ -137,8 +129,6 @@ class Database(object):
         for index,row in tqdm(df.iterrows()):
             if index == max_import:
                break
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' graduation rates')
             entry = row.to_dict()
             if math.isnan(entry['UPASS']):
                 continue
@@ -152,8 +142,6 @@ class Database(object):
         for index,row in tqdm(df.iterrows()):
             if index == max_import:
                 break
-            if index%1000 == 0:
-                    print(str(index)+' out of '+str(df.size) + ' employment rates')
             entry = row.to_dict()
             if math.isnan(entry['WORKSTUDY']) or entry['WORKSTUDY'] == 0.0:
                 continue
@@ -168,8 +156,6 @@ class Database(object):
         values_studentsatisfaction = []
         print("computing graduation rates")
         for idx,institution in tqdm(enumerate(institutions)):
-            if idx%1000 == 0:
-                    print(str(idx)+' out of '+str(institutions.count()) + 'institution rates computed')
             prn = institution["UKPRN"]
             for course in self.courses.find({'UKPRN':prn}):
                 if ('median_salary' not in course) or ('graduation_rate_percent' not in course) or ('employment_rate_percent' not in course) or ('studentsatisfaction_rate_percent' not in course):
