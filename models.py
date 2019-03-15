@@ -188,5 +188,7 @@ class RankClass(object):
 		ranked_prns = []
 		for key, value in sorted(institution_scores.items(), key=operator.itemgetter(1), reverse=True):
 			#iterate over the institution scores dict, by value (=the total points obtained)
-			ranked_prns.append(Institutions().GetByPRN(key)) #append the final "leaderboard" to the list, index of the list determining the index
+			institution = Institutions().GetByPRN(key)
+			institution['points'] = value
+			ranked_prns.append(institution) #append the final "leaderboard" to the list, index of the list determining the index
 		return ranked_prns
