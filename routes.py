@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, json, redirect, url_for, abort, session
 from pymongo import MongoClient
 
+import sys
 import random,json,math
 
 from helpers import get_logo, get_wiki, rank_it
@@ -164,4 +165,7 @@ def rankt():
     return response  
 
 if __name__ == '__main__':
-    app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com", port=80, debug=True)
+    if len(sys.argv) > 1 and sys.argv[1] == 'local':
+        app.run()
+    else:
+        app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com", port=80, debug=True)
