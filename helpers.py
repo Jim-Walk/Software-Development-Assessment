@@ -38,6 +38,3 @@ def rank_it(c_list, salary, teach):
         return sorted(c_list, key=lambda k: k['nss'][0]['Q27'], reverse=True)
     else:
         return sorted(c_list, key=lambda k: k['salary'][0]['MED'], reverse=True)
-
-if __name__ == '__main__':
-    pprint.pprint(get_logo("Glasgow university"))
