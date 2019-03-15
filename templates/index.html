@@ -13,8 +13,8 @@
 <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
 
 <div class="starter-template">
-  <h1>Rank it!</h1>
-  <p class="lead">A research tool for prospective university students</p>
+  <h1><span class="glyphicon glyphicon-equalizer"></span><u>R</u>ank <u>I</u>t!</h1>
+  <p class="lead">A research tool for prospective University students</p>
 </div>
 
 <form id="rank-form" action="" class="container ">
@@ -23,14 +23,14 @@
           <label for="studyLevelSelect">Study Level</label>
           <select name="study" class="form-control" id="studyLevelSelect">
                   <option>Undergraduate</option>
-                  <option>Postgraduate</option>
+                  <option disabled><i>Postgraduate (Coming Soon)</i></option>
           </select>        
       </div>
       <div class="form-group col-md-3 ">
           <label for="regionSelect">Region</label>
           <select name="region" class="form-control" id="regionSelect">
-                  <option>Worldwide</option>
                   <option>UK</option>
+                  <option disabled>Worldwide (Coming Soon)</option>
           </select> 
       </div>
       <div class="form-group col-md-3 ">
@@ -66,7 +66,7 @@
           <label for="yearSelect">Year</label>
           <select name="year" class="form-control" id="yearSelect">
                   <option>2018</option>
-                  <option>2017</option>
+                  <option disabled>2017 (Coming Soon)</option>
           </select>
       </div>
   </div>
