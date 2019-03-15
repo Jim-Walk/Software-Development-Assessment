@@ -171,22 +171,22 @@ class RankClass(object):
 			normal_salary = int(((course['median_salary']) - salary_min) / salary_range)
 			salary_pts = int(normal_salary *  self.salary)
 			studfeed_pts = int(course['studentsatisfaction_rate_percent'] * self.studfeed)
-			if (grad_pts <= 0.0) or (empl_pts <= 0.0) or (salary_pts <= 0.0) or (studfeed_pts <= 0.0):
-				#remove the course if any of the points yields zero, arbitrary but to be improved
-				courses_bysubject.remove(course)
-				continue
-			#add the points to the course dict
 			totpts = grad_pts + empl_pts + salary_pts + studfeed_pts
 			courses_bysubject[idx]['tot_points'] = totpts
-		courses_bysubject.sort(key = lambda i: i['graduation_rate_percent'],reverse=True)
+			#add the points to the course dict
 		institution_scores = {} #group individual course scores by institutions (by UKPRNs)
 		for idx,course in enumerate(courses_bysubject):
+			if 'tot_points' not in courses_bysubject[idx]:
+				continue
 			if course['UKPRN'] not in institution_scores:
-				institution_scores[course['UKPRN']] = len(courses_bysubject) - idx 
+				institution_scores[course['UKPRN']] = courses_bysubject[idx]['tot_points'] 
 			else:
-				institution_scores[course['UKPRN']] += len(courses_bysubject) - idx
+				institution_scores[course['UKPRN']] += courses_bysubject[idx]['tot_points']
+
 		ranked_prns = []
 		for key, value in sorted(institution_scores.items(), key=operator.itemgetter(1), reverse=True):
 			#iterate over the institution scores dict, by value (=the total points obtained)
-			ranked_prns.append(Institutions().GetByPRN(key)) #append the final "leaderboard" to the list, index of the list determining the index
+			institution = Institutions().GetByPRN(key)
+			institution['points'] = value
+			ranked_prns.append(institution) #append the final "leaderboard" to the list, index of the list determining the index
 		return ranked_prns

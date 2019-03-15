@@ -140,6 +140,7 @@
                           +"<tr>"
                               +"<th class='col-md-1 text-center'>Rank</th>"
                               +"<th class='col-md-3 text-center'>Institution Name</th>"
+                              +"<th class='col-md-3 text-center'>Points</th>"
                           +"</tr>"
                         +"</thead>"
                         +"<tbody>"; 
@@ -155,10 +156,11 @@
       $(".sd-table").html(table);
       $('#example').DataTable();
     }
-    function new_row(rank, PROVIDER_NAME, UKPRN, title, grad_rates, salary, teaching){
+    function new_row(rank, PROVIDER_NAME, UKPRN, points){
       var html = "<tr>"+
                 "<td class='col-md-1 text-center'>"+rank+"</td>"+
                 "<td class='col-md-3 text-center'>"+"<a href='/institution/"+UKPRN+"'>"+PROVIDER_NAME+"</a></td>"+
+                "<td class='col-md-1 text-center'>"+points+"</td>"+
                 "</tr>";          
       return html;  
     }
@@ -181,7 +183,7 @@
                                                 /*rank*/  i+1, 
                                                           json[i].PROVIDER_NAME, 
                                                           json[i].UKPRN, 
-                                                          json[i].TITLE, 
+                                                          json[i].points
                                           /*grad rates*/ /* Math.floor(json[i].graduation_rate_percent), */
                                               /*salary*/  /*Math.floor(json[i].employment_rate_percent)*/
                                                         );
