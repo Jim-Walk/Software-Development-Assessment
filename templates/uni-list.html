@@ -28,12 +28,7 @@
     <table id="example" class="table table-hover table-bordered table-striped" style="width:100%">
         <thead>
           <tr>
-            <th class="col-md-1 text-center">Rank</th>
             <th class="col-md-3 text-center">Name</th>
-            <th class="col-md-2 text-center">Graduation rates</th>
-            <th class="col-md-2 text-center">Employment Rate Post-Graduation</th>
-            <th class="col-md-2 text-center">Expected Salary (GBP)</th>
-            <th class="col-md-2 text-center">Student Feedback</th>
           </tr>
         </thead>
         <tbody>
@@ -41,12 +36,8 @@
             {%for uni in uni_list %}
               {%if uni.PROVIDER_NAME|length > 0 %}
                 <tr>
-                  <td class="col-md-1 text-center">{{loop.index}}</td>
                   <td class="col-md-3 text-center"><a href="/institution/{{uni.UKPRN}}">{{uni.PROVIDER_NAME}}</a></br></td>
-                  <td class="col-md-2 text-center">{{uni.graduation_rate_percent}}</td>
-                  <td class="col-md-2 text-center">{{uni.employment_rate_percent}}</td>
-                  <td class="col-md-2 text-center">{{uni.median_salary}}</td>
-                  <td class="col-md-2 text-center">{{uni.studentsatisfaction_rate_percent}}</td>  
+
                 </tr>
               {%endif%}  
             {%endfor%}  

@@ -190,7 +190,3 @@ class RankClass(object):
 			#iterate over the institution scores dict, by value (=the total points obtained)
 			ranked_prns.append(Institutions().GetByPRN(key)) #append the final "leaderboard" to the list, index of the list determining the index
 		return ranked_prns
-
-if __name__ == '__main__':
-    rank = RankClass('CAH07', 50, 50, 50, 50)
-    pprint.pprint(rank.GetResult()[0])

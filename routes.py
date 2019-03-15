@@ -149,7 +149,19 @@ def rank():
     )
     return response  
 
-
+@app.route('/rankt')
+def rankt():
+    pref_grad = 50
+    pref_empl = 50
+    pref_salary = 50
+    pref_studfeed = 50
+    rank = RankClass('CAH10', pref_grad, pref_empl, pref_salary, pref_studfeed)
+    outdata = dumps(rank.GetResult())
+    response = app.response_class(
+        response=json.dumps(outdata),
+        mimetype='application/json'
+    )
+    return response  
 
 if __name__ == '__main__':
     app.run(host="ec2-18-130-215-119.eu-west-2.compute.amazonaws.com", port=80, debug=True)

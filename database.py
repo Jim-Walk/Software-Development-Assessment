@@ -20,24 +20,16 @@ class Database(object):
 		else:
 			print("Abort")
 	def Bootstrap(self):
-		'''
 		self.ImportInstitutions()
 		self.ImportCourses()
 		self.ImportLocations()
-		
 		self.ImportNSS()
-		
 		self.ImportSalary()
-		
 		self.ImportGraduationRates()
-		
-		
 		self.ImportEmploymentRates()
-
-		self.ComputeGraduationEmploymentRates()
-'''		
+		self.ComputeInstitutionAverages()
 		self.AssignSubjects()
-
+		
 	def ImportInstitutions(self):
 		print('Importing Institutions...')
 		self.institutions.create_index([('$**', 'text')])
@@ -148,18 +140,25 @@ class Database(object):
 			kiscourseid = entry["KISCOURSEID"]
 			self.courses.update({'KISCOURSEID':kiscourseid},{ '$set':  { 'employment_rate_percent': entry["WORKSTUDY"]}}, upsert=True )
 
-	def ComputeGraduationEmploymentRates(self):
+	def ComputeInstitutionAverages(self):
 		institutions = self.institutions.find()
 		values_employment = []
 		values_graduation = []
+		values_salary = []
+		values_studentsatisfaction = []
 		print("computing graduation rates")
 		for idx,institution in enumerate(institutions):
 			if idx%1000 == 0:
 					print(str(idx)+' out of '+str(institutions.count()) + 'institution rates computed')
 			prn = institution["UKPRN"]
 			for course in self.courses.find({'UKPRN':prn}):
+				if ('median_salary' not in course) or ('graduation_rate_percent' not in course) or ('employment_rate_percent' not in course) or ('studentsatisfaction_rate_percent' not in course):
+					continue
 				values_employment.append(course['employment_rate_percent'])
 				values_graduation.append(course['graduation_rate_percent'])
+				values_salary.append(course['median_salary'])
+				values_studentsatisfaction.append(course['studentsatisfaction_rate_percent'])
+
 			
 			if len(values_graduation) > 0:
 				institution_gradrate = (sum(values_graduation)/len(values_graduation))
@@ -170,10 +169,24 @@ class Database(object):
 				institution_emprate = (sum(values_employment)/len(values_employment))
 			else:
 				institution_emprate = None
+
+			if len(values_salary) > 0:
+				institution_salary = (sum(values_salary)/len(values_salary))
+			else:
+				institution_salary = None
+
+			if len(values_employment) > 0:
+				institution_studentsat = (sum(values_studentsatisfaction)/len(values_studentsatisfaction))
+			else:
+				institution_studentsat = None
 			self.institutions.update({'UKPRN':prn},{ '$set':  { 'employment_rate_percent': institution_emprate}}, upsert=True  )
 			self.institutions.update({'UKPRN':prn},{ '$set':  { 'graduation_rate_percent': institution_gradrate}}, upsert=True  )
+			self.institutions.update({'UKPRN':prn},{ '$set':  { 'median_salary': institution_salary}}, upsert=True  )
+			self.institutions.update({'UKPRN':prn},{ '$set':  { 'studentsatisfaction_rate_percent': institution_studentsat}}, upsert=True  )
 			values_employment.clear()
 			values_graduation.clear()
+			values_salary.clear()
+			values_studentsatisfaction.clear()
 
 
 	def AssignSubjects(self):
@@ -211,5 +224,5 @@ class Database(object):
 
 if __name__ == '__main__':
     d = Database()
-    #d.DropDB()
+    d.DropDB()
     d.Bootstrap()
