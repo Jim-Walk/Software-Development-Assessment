@@ -77,7 +77,9 @@ class Database(object):
     def ImportNSS(self, max_import):
         df = pd.read_csv('./data/NSS.csv')
         print('Importing NSS')
-        for index,row in df.iterrows():
+        for index,row in tqdm(df.iterrows()):
+        	if index == max_import:
+        		break
             if index%1000 == 0:
                     print(str(index)+' out of '+str(df.size) + ' NSS entries')
             entry = row.to_dict()
