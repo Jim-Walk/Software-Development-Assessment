@@ -1,6 +1,9 @@
 from pymongo import MongoClient, TEXT
 import pandas as pd
 import csv, math, pprint
+
+import sys
+from tqdm import tqdm #status bar
 client = MongoClient()
 db = client.rankit
 
@@ -19,14 +22,14 @@ class Database(object):
 			print("DB Dropped")
 		else:
 			print("Abort")
-	def Bootstrap(self):
-		self.ImportInstitutions()
-		self.ImportCourses()
-		self.ImportLocations()
-		self.ImportNSS()
-		self.ImportSalary()
-		self.ImportGraduationRates()
-		self.ImportEmploymentRates()
+	def Bootstrap(self, max_import):
+		self.ImportInstitutions(max_import)
+		self.ImportCourses(max_import)
+		self.ImportLocations(max_import)
+		self.ImportNSS(max_import)
+		self.ImportSalary(max_import)
+		self.ImportGraduationRates(max_import)
+		self.ImportEmploymentRates(max_import)
 		self.ComputeInstitutionAverages()
 		self.AssignSubjects()
 		
@@ -34,15 +37,18 @@ class Database(object):
 		print('Importing Institutions...')
 		self.institutions.create_index([('$**', 'text')])
 		df = pd.read_csv('./data/learning-providers.csv')
-		for index,row in df.iterrows():
+    for index,row in tqdm(df.iterrows()):
 			entry = row.to_dict()
 			entry['courses_ids'] = []
 			entry['locations'] = []
 			self.institutions.update({'UKPRN':entry['UKPRN']}, entry, upsert=True)
-	def ImportCourses(self):
+      if index == max_import:
+          break
+
+	def ImportCourses(self, max_import):
 		print('Importing Courses...')
 		df = pd.read_csv('./data/KISCOURSE.csv', low_memory=False)
-		for index,row in df.iterrows():
+    for index,row in tqdm(df.iterrows()):
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' courses')
 			entry = row.to_dict()
@@ -50,21 +56,25 @@ class Database(object):
 			kiscourseid = entry['KISCOURSEID']
 			self.courses.update({'KISCOURSEID':kiscourseid}, entry, upsert=True)
 			self.institutions.update( {'UKPRN':ukprn}, { '$push': { 'courses_ids': kiscourseid } }, upsert=True )
+      if index == max_import:
+        break
 		self.courses.create_index([('$**', 'text')])
 
-	def ImportLocations(self):
+	def ImportLocations(self, max_import):
 		df = pd.read_csv('./data/LOCATION.csv')
 		print('Importing Locations')
-		for index,row in df.iterrows():
+    for index,row in tqdm(df.iterrows()):
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' locations')
 			entry = row.to_dict()
 			ukprn = entry['UKPRN']
 			entry.pop('UKPRN')
 			self.institutions.update( {'UKPRN':ukprn}, { '$push': { 'locations': entry } }, upsert=True )
+      if index == max_import:
+        break      
 		self.institutions.create_index([('$**', 'text')])
 
-	def ImportNSS(self):
+	def ImportNSS(self, max_import):
 		df = pd.read_csv('./data/NSS.csv')
 		print('Importing NSS')
 		for index,row in df.iterrows():
@@ -80,6 +90,8 @@ class Database(object):
 			entry.pop('KISMODE')
 			self.courses.update({'KISCOURSEID':kiscourseid}, { '$push': { 'nss': entry} }, upsert=True )
 			self.courses.update({'KISCOURSEID':kiscourseid}, { '$set': {'studentsatisfaction_rate_percent': entry['Q27']}}, upsert=True )
+      if index == max_import:
+        break
 		self.courses.create_index([('$**', 'text')])
 		'''
 		df = pd.read_csv('./data/NHSNSS.csv')
@@ -97,10 +109,12 @@ class Database(object):
 		self.courses.create_index([('$**', 'text')])
 		'''
 
-	def ImportSalary(self):
+	def ImportSalary(self, max_import):
 		df = pd.read_csv('./data/SALARY.csv')
 		print('Importing Salary')
-		for index,row in df.iterrows():
+    for index,row in tqdm(df.iterrows()):
+      if index == max_import:
+          break
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' salaries')
 			entry = row.to_dict()
@@ -115,10 +129,12 @@ class Database(object):
 			self.courses.update({'KISCOURSEID':kiscourseid},{ '$set': { 'median_salary': entry['INSTMED']}}, upsert=True )
 		self.courses.create_index([('$**', 'text')])
 
-	def ImportGraduationRates(self):
+	def ImportGraduationRates(self, max_import):
 		df = pd.read_csv('./data/DEGREECLASS.csv')
 		print("Adding Graduation Rate")
-		for index,row in df.iterrows():
+		for index,row in tqdm(df.iterrows()):
+      if index == max_import:
+          break
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' graduation rates')
 			entry = row.to_dict()
@@ -128,10 +144,12 @@ class Database(object):
 			self.courses.update({'KISCOURSEID':kiscourseid},{ '$set':  { 'graduation_rate_percent': entry["UPASS"]} }, upsert=True )
 
 
-	def ImportEmploymentRates(self):
+	def ImportEmploymentRates(self, max_import):
 		df = pd.read_csv('./data/EMPLOYMENT.csv')
 		print("Adding Employment Rates 6M post-graduation")
-		for index,row in df.iterrows():
+		for index,row in tqdm(df.iterrows()):
+      if index == max_import:
+          break
 			if index%1000 == 0:
 					print(str(index)+' out of '+str(df.size) + ' employment rates')
 			entry = row.to_dict()
@@ -147,7 +165,7 @@ class Database(object):
 		values_salary = []
 		values_studentsatisfaction = []
 		print("computing graduation rates")
-		for idx,institution in enumerate(institutions):
+		for idx,institution in tqdm(enumerate(institutions)):
 			if idx%1000 == 0:
 					print(str(idx)+' out of '+str(institutions.count()) + 'institution rates computed')
 			prn = institution["UKPRN"]
@@ -208,8 +226,7 @@ class Database(object):
 		for doc in db.courses.find():
 			courses.append(doc)
 
-		for x in courses:
-
+		for index,x in tqdm(enumerate(courses)):
 			if 'KISCOURSEID' not in x:
 				db.courses.delete_one({'_id':x['_id']})
 				courses.remove(x)
@@ -221,8 +238,12 @@ class Database(object):
 			self.courses.update({'KISCOURSEID': kiscourseid},{ '$set':  {'subject_description' : subject_description} }, upsert=True)
 
 
-
 if __name__ == '__main__':
     d = Database()
     d.DropDB()
-    d.Bootstrap()
+    if len(sys.argv) == 2:
+        max_import = int(sys.argv[1])
+        d.Bootstrap(max_import)
+    else:
+        print('WARNING: Importing all courses. This will take at least half an hour')
+        d.Bootstrap(-1)

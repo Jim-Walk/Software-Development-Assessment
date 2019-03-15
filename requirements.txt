@@ -5,3 +5,4 @@ wikipedia-api
 requests
 titlecase
 wikipedia
+tqdm

@@ -12,13 +12,17 @@ sudo apt install python3 python3-pip mongodb-server
 ```
 
 
-For use with python3. Install necessary packages in either the website or the crawler folder with `pip install -r website/requirements.txt`
+For use with python3. Install necessary packages in either the website or the crawler folder with `pip install website/requirements.txt`
 
 ## Quick Start
 
 After you've installed mongodb and you're sure it's up and running, simply import the data using the import script.
 ```
 python3 database.py
+```
+Importing all of the data will take roughly an hour. We recommend specifiy a maximum import size when running the script, like so
+```
+python3 database.py 3000
 ```
 
 You can then run the server 
