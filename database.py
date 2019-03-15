@@ -74,6 +74,8 @@ class Database(object):
         df = pd.read_csv('./data/NSS.csv')
         print('Importing NSS')
         for index,row in tqdm(df.iterrows()):
+            if index == max_import:
+                break
             entry = row.to_dict()
             if math.isnan(entry['Q27']) or entry['Q27'] == 0.0:
                 continue
