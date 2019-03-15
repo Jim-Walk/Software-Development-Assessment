@@ -2,13 +2,17 @@ from database import *
 from pymongo import MongoClient, TEXT
 import pandas as pd
 import csv, math, pprint, random, operator
+import database
 
 client = MongoClient()
 db = client.rankit
 
 
+
+
 class Institutions(object):
 	instcol = db.institutions
+
 
 	def GetByPRNList(self,list): #Get a list of institutions from a list of PRNs
 		result = []
@@ -62,8 +66,9 @@ class Courses(object):
 		courses = self.Search(searchstr)
 		result = []
 		for course in courses:
-			if course['UKPRN'] == UKPRN:
-				result.append(course)
+			if 'UKPRN' in course:
+				if course['UKPRN'] == UKPRN:
+					result.append(course)
 		return result
 
 	def GetSingleByKIS(self, KIS): #Get a single course by it's KISCOUSEID, as a dict
@@ -79,11 +84,11 @@ class Courses(object):
 		return result
 
 	def GetBySubject(self, cah_code): #Get all courses from a given subject, by CAH(subject) code. See data/CAH.csv for cah code descriptions
-		query = {'subject_cah':cah_code}
-
-		cursor = self.coursecol.find(query).sort('UKPRN', 1)
+		cursor = self.coursecol.find({'subject_cah':cah_code})
 		result = []
 		for doc in cursor:
+			if ('UKPRN' not in doc) or ('median_salary' not in doc) or ('graduation_rate_percent' not in doc) or ('employment_rate_percent' not in doc) or ('studentsatisfaction_rate_percent' not in doc):
+				continue
 			result.append(doc)	
 		return result
 
@@ -149,8 +154,11 @@ class RankClass(object):
 		salaries = []
 		#compute max a min salaries from the courses, to normalize each course's salary
 		for course in courses_bysubject:
-			salaries.append(course['median_salary'])
-		return(salaries)
+			if 'median_salary' in course and (math.isnan(course['median_salary']) == False):
+				salaries.append(course['median_salary'])
+			if ('median_salary' not in course) or ('graduation_rate_percent' not in course) or ('employment_rate_percent' not in course) or ('studentsatisfaction_rate_percent' not in course):
+				courses_bysubject.remove(course)
+
 		salary_min = min(salaries)
 		salary_range = max(salaries) - salary_min
 		#iterate over courses
@@ -165,10 +173,12 @@ class RankClass(object):
 			studfeed_pts = int(course['studentsatisfaction_rate_percent'] * self.studfeed)
 			if (grad_pts <= 0.0) or (empl_pts <= 0.0) or (salary_pts <= 0.0) or (studfeed_pts <= 0.0):
 				#remove the course if any of the points yields zero, arbitrary but to be improved
-				courses_bysubject.pop(idx)
+				courses_bysubject.remove(course)
+				continue
 			#add the points to the course dict
-			course['tot_points'] = 	grad_pts + empl_pts + salary_pts + studfeed_pts
-		courses_bysubject.sort(key=operator.itemgetter('tot_points'))
+			totpts = grad_pts + empl_pts + salary_pts + studfeed_pts
+			courses_bysubject[idx]['tot_points'] = totpts
+		courses_bysubject.sort(key = lambda i: i['graduation_rate_percent'],reverse=True)
 		institution_scores = {} #group individual course scores by institutions (by UKPRNs)
 		for idx,course in enumerate(courses_bysubject):
 			if course['UKPRN'] not in institution_scores:
@@ -178,5 +188,5 @@ class RankClass(object):
 		ranked_prns = []
 		for key, value in sorted(institution_scores.items(), key=operator.itemgetter(1), reverse=True):
 			#iterate over the institution scores dict, by value (=the total points obtained)
-			ranked_prns.append(Institutions.GetByPRN(key)) #append the final "leaderboard" to the list, index of the list determining the index
+			ranked_prns.append(Institutions().GetByPRN(key)) #append the final "leaderboard" to the list, index of the list determining the index
 		return ranked_prns

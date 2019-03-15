@@ -13,8 +13,8 @@
 <link href="{{ url_for('static',filename='css/a.css') }}" rel="stylesheet">
 
 <div class="starter-template">
-  <h1>Rank it!</h1>
-  <p class="lead">A research tool for prospective university students</p>
+  <h1><span class="glyphicon glyphicon-equalizer"></span><u>R</u>ank <u>I</u>t!</h1>
+  <p class="lead">A research tool for prospective University students</p>
 </div>
 
 <form id="rank-form" action="" class="container ">
@@ -23,14 +23,14 @@
           <label for="studyLevelSelect">Study Level</label>
           <select name="study" class="form-control" id="studyLevelSelect">
                   <option>Undergraduate</option>
-                  <option>Postgraduate</option>
+                  <option disabled><i>Postgraduate (Coming Soon)</i></option>
           </select>        
       </div>
       <div class="form-group col-md-3 ">
           <label for="regionSelect">Region</label>
           <select name="region" class="form-control" id="regionSelect">
-                  <option>Worldwide</option>
                   <option>UK</option>
+                  <option disabled>Worldwide (Coming Soon)</option>
           </select> 
       </div>
       <div class="form-group col-md-3 ">
@@ -66,7 +66,7 @@
           <label for="yearSelect">Year</label>
           <select name="year" class="form-control" id="yearSelect">
                   <option>2018</option>
-                  <option>2017</option>
+                  <option disabled>2017 (Coming Soon)</option>
           </select>
       </div>
   </div>
@@ -139,10 +139,7 @@
                         +"<thead>"
                           +"<tr>"
                               +"<th class='col-md-1 text-center'>Rank</th>"
-                              +"<th class='col-md-3 text-center'>Name</th>"
-                              +"<th class='col-md-2 text-center'>Graduation rates</th>"
-                              +"<th class='col-md-2 text-center'>Salary</th>"
-                              +"<th class='col-md-2 text-center'>Teaching excellence</th>"
+                              +"<th class='col-md-3 text-center'>Institution Name</th>"
                           +"</tr>"
                         +"</thead>"
                         +"<tbody>"; 
@@ -161,10 +158,7 @@
     function new_row(rank, PROVIDER_NAME, UKPRN, title, grad_rates, salary, teaching){
       var html = "<tr>"+
                 "<td class='col-md-1 text-center'>"+rank+"</td>"+
-                "<td class='col-md-3 text-center'>"+"<a href='/institution/"+UKPRN+"'>"+PROVIDER_NAME+"<br>"+title+"</a></td>"+
-                "<td class='col-md-2 text-center'>"+grad_rates+"%"+"</td>"+
-                "<td class='col-md-2 text-center'>"+salary+"$"+"</td>"+
-                "<td class='col-md-2 text-center'>"+teaching+"%"+"</td>"+  
+                "<td class='col-md-3 text-center'>"+"<a href='/institution/"+UKPRN+"'>"+PROVIDER_NAME+"</a></td>"+
                 "</tr>";          
       return html;  
     }
@@ -188,9 +182,8 @@
                                                           json[i].PROVIDER_NAME, 
                                                           json[i].UKPRN, 
                                                           json[i].TITLE, 
-                                          /*grad rates*/  100, 
-                                              /*salary*/  json[i]['salary'][0].MED, 
-                                            /*teaching*/  json[i]['nss'][0].Q27
+                                          /*grad rates*/ /* Math.floor(json[i].graduation_rate_percent), */
+                                              /*salary*/  /*Math.floor(json[i].employment_rate_percent)*/
                                                         );
                     }
                   }

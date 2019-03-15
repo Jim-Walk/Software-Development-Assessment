@@ -60,8 +60,8 @@
             <tbody>
               <tr>
                 <td>
-                  {% if course.graduation_rate_percent[0] > 0.0 %}
-                    {{course.employment_rate_percent[0]}}%
+                  {% if course.graduation_rate_percent > 0.0 %}
+                    {{course.employment_rate_percent}}%
                   {%else%}
                     No data available
                   {%endif%}
@@ -69,8 +69,8 @@
                 </td>
                 <td>
 
-                  {% if course.employment_rate_percent[0] > 0.0 %}
-                    {{course.employment_rate_percent[0]}}%
+                  {% if course.employment_rate_percent > 0.0 %}
+                    {{course.employment_rate_percent}}%
                   {%else%}
                     No data available
                   {%endif%}
@@ -103,7 +103,7 @@
         <div class="panel-body" id="pro_dscri"> 
             <h4>Related courses in 
 
-            <b>{{course.subject_description[0].title()}}</b> at 
+            <b>{{course.subject_description.title()}}</b> at 
 
 
         {%if institution.PROVIDER_NAME%}
