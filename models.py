@@ -1,7 +1,7 @@
 from database import *
 from pymongo import MongoClient, TEXT
 import pandas as pd
-import csv, math, pprint, random, operator
+import csv, math, pprint, random, operator, numpy
 import database
 
 client = MongoClient()
@@ -168,7 +168,7 @@ class RankClass(object):
 					continue
 			grad_pts = int(course['graduation_rate_percent'] * self.grad)
 			empl_pts = int(course['employment_rate_percent'] * self.empl)
-			normal_salary = int(((course['median_salary']) - salary_min) / salary_range)
+			normal_salary = (((course['median_salary']) - salary_min) / salary_range) * 100
 			salary_pts = int(normal_salary *  self.salary)
 			studfeed_pts = int(course['studentsatisfaction_rate_percent'] * self.studfeed)
 			totpts = grad_pts + empl_pts + salary_pts + studfeed_pts
@@ -188,5 +188,38 @@ class RankClass(object):
 			#iterate over the institution scores dict, by value (=the total points obtained)
 			institution = Institutions().GetByPRN(key)
 			institution['points'] = value
+			courses = []
+			for c in courses_bysubject:
+				if c['UKPRN'] == key:
+					courses.append(c)
+
+			gradl = []
+			empll = []
+			sall = []
+			feedl = []
+			for c in courses:
+				gradl.append(c['graduation_rate_percent'])
+				empll.append(c['employment_rate_percent'])
+				sall.append(c['median_salary'])
+				feedl.append(c['studentsatisfaction_rate_percent'])
+
+
+			institution['s_grad'] = round(numpy.mean(gradl),0)
+			if institution['s_grad'] <= 0:
+				institution['s_grad'] = "No data available."
+
+			institution['s_empl'] = round(numpy.mean(empll),0)
+			if institution['s_empl'] <= 0:
+				institution['s_empl'] = "No data available."
+
+			institution['s_sal'] = round(numpy.mean(sall),0)
+			if institution['s_sal'] <= 0:
+				institution['s_sal'] = "No data available."
+
+			institution['s_feed'] = round(numpy.mean(feedl),0)
+			if institution['s_feed'] <= 0:
+				institution['s_feed'] = "No data available."
+
+			print(institution['s_grad'])
 			ranked_prns.append(institution) #append the final "leaderboard" to the list, index of the list determining the index
 		return ranked_prns

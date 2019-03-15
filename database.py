@@ -1,6 +1,6 @@
 from pymongo import MongoClient, TEXT
 import pandas as pd
-import csv, math, pprint
+import csv, math, pprint, random
 
 import sys
 from tqdm import tqdm #status bar
@@ -133,6 +133,9 @@ class Database(object):
             if math.isnan(entry['UPASS']):
                 continue
             kiscourseid = entry["KISCOURSEID"]
+            rate = entry["UPASS"]
+            if rate == 0: #if the course has no graduation rate or a rate of zero, assign a random value between 0 and 100, ONLY IN THE PROTOTYPE
+                rate = random.randint(1,101)
             self.courses.update({'KISCOURSEID':kiscourseid},{ '$set':  { 'graduation_rate_percent': entry["UPASS"]} }, upsert=True )
 
 

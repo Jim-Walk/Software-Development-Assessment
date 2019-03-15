@@ -140,6 +140,10 @@
                           +"<tr>"
                               +"<th class='col-md-1 text-center'>Rank</th>"
                               +"<th class='col-md-3 text-center'>Institution Name</th>"
+                              +"<th class='col-md-3 text-center'>Graduation Rate</th>"
+                              +"<th class='col-md-3 text-center'>Employment Rate</th>"
+                              +"<th class='col-md-3 text-center'>Expected Salary</th>"
+                              +"<th class='col-md-3 text-center'>Satisfied Students</th>"
                               +"<th class='col-md-3 text-center'>Points</th>"
                           +"</tr>"
                         +"</thead>"
@@ -156,10 +160,14 @@
       $(".sd-table").html(table);
       $('#example').DataTable();
     }
-    function new_row(rank, PROVIDER_NAME, UKPRN, points){
+    function new_row(rank, PROVIDER_NAME, UKPRN, grad_rate, empl_rate, salary, studfeed, points){
       var html = "<tr>"+
                 "<td class='col-md-1 text-center'>"+rank+"</td>"+
                 "<td class='col-md-3 text-center'>"+"<a href='/institution/"+UKPRN+"'>"+PROVIDER_NAME+"</a></td>"+
+                "<td class='col-md-1 text-center'>"+grad_rate+" %</td>"+
+                "<td class='col-md-1 text-center'>"+empl_rate+" %</td>"+
+                "<td class='col-md-1 text-center'>GBP "+salary+"</td>"+
+                "<td class='col-md-1 text-center'>"+studfeed+" %</td>"+
                 "<td class='col-md-1 text-center'>"+points+"</td>"+
                 "</tr>";          
       return html;  
@@ -182,7 +190,11 @@
                       table_rows = table_rows + new_row(
                                                 /*rank*/  i+1, 
                                                           json[i].PROVIDER_NAME, 
-                                                          json[i].UKPRN, 
+                                                          json[i].UKPRN,
+                                                          json[i].s_grad,
+                                                          json[i].s_empl,
+                                                          json[i].s_sal,
+                                                          json[i].s_feed,
                                                           json[i].points
                                           /*grad rates*/ /* Math.floor(json[i].graduation_rate_percent), */
                                               /*salary*/  /*Math.floor(json[i].employment_rate_percent)*/
