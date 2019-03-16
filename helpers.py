@@ -6,7 +6,6 @@ from titlecase import titlecase
 # Takes as input a univerity's title field, returns 
 # the logo of that university through a google API query.
 # NOTE: This API is only valid for 100 requests per day
-'''
 def get_logo(uni_title):
     url ='https://www.googleapis.com/customsearch/v1?searchType=image&cx=011314089285855499136%3Ata88ozaawbs&num=1&fields=items(link)'+config.API_KEY
     # construct query string using a list comprhension
@@ -16,13 +15,13 @@ def get_logo(uni_title):
     return r.json()['items'][0]['link']
 '''
 def get_logo(institution_title):
-    '''
+    
     page = wikipedia.page(wikipedia.search(institution_title)[0])
     page.images.sort()
     return page.images[0]
-    '''
-    return "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/University_of_Edinburgh_ceremonial_roundel.svg/1024px-University_of_Edinburgh_ceremonial_roundel.svg.png"
     
+    return "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/University_of_Edinburgh_ceremonial_roundel.svg/1024px-University_of_Edinburgh_ceremonial_roundel.svg.png"
+   ''' 
 def get_wiki(uni_title):
     wiki = wikipediaapi.Wikipedia('en')
     page = wiki.page(titlecase(uni_title))
