@@ -20,7 +20,7 @@
     {%for uni in results%}
         {%if uni.PROVIDER_NAME%}
 
-                 <li> Courses at: <a href="/institution/{{ uni.UKPRN }}">{{ uni.PROVIDER_NAME.title() }}</a>
+                 <li> Programmes at: <a href="/institution/{{ uni.UKPRN }}">{{ uni.PROVIDER_NAME.title() }}</a>
                 {%for course in uni.courses_list%}
 
                 <ul>
