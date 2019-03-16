@@ -189,7 +189,7 @@
                     if(typeof json[i].PROVIDER_NAME !== 'undefined'){
                       var s_grad = json[i].s_grad+'%';
                       var s_sal = 'GBP '+json[i].s_sal;
-                      if(json[i].s_grad.trim() == 'No data available.' || json[i].s_grad == null ){
+                      if(json[i].s_grad == null || json[i].s_grad.trim() == 'No data available.'){
                         var s_grad = 'No data available'; 
                       }
                       if(json[i].s_sal == null){
