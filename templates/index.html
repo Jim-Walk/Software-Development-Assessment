@@ -73,17 +73,17 @@
 
   <div class="row "> <!-- sliders -->
       <div class="form-group col-md-3">
-          <label>Graduation rates</label>
+          <label>Graduation Rate</label>
           <input name='grad_rates' type="range" min="1" max="100" value="50" class="slider" id="studyLevelRange">
           <label id="sliderval1">50</label>        
       </div>
       <div class="form-group col-md-3">
-          <label>Employment chance</label>
+          <label>Employment Rate</label>
           <input name='empl_chance' type="range" min="1" max="100" value="50" class="slider" id="employmentChanceRange">
           <label id="sliderval2"></label>        
       </div>
       <div class="form-group col-md-3">
-          <label>Salary</label>
+          <label>Expected Salary</label>
           <input name='salary' type="range" min="1" max="100" value="50" class="slider" id="salaryOfLifeRange">
           <label id="sliderval3"></label>        
       </div>
@@ -142,7 +142,7 @@
                               +"<th class='col-md-3 text-center'>Institution Name</th>"
                               +"<th class='col-md-3 text-center'>Graduation Rate</th>"
                               +"<th class='col-md-3 text-center'>Employment Rate</th>"
-                              +"<th class='col-md-3 text-center'>Expected Salary</th>"
+                              +"<th class='col-md-3 text-center'>Expected Salary (GBP)</th>"
                               +"<th class='col-md-3 text-center'>Satisfied Students</th>"
                               +"<th class='col-md-3 text-center'>Points</th>"
                           +"</tr>"
@@ -189,7 +189,7 @@
                     if(typeof json[i].PROVIDER_NAME !== 'undefined'){
                       
                       var s_grad = json[i].s_grad+'%';
-                      var s_sal = 'GBP '+json[i].s_sal;
+                      var s_sal = ' '+json[i].s_sal;
                       var s_empl = json[i].s_empl+'%';
                       var s_feed = json[i].s_feed+'%';
 

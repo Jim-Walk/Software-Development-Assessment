@@ -72,8 +72,8 @@
                     <th class="col-md-3 text-center">Name</th>
                     <th class="col-md-3 text-center">Graduation Rate</th>
                     <th class="col-md-3 text-center">Employment Rate</th>
-                    <th class="col-md-3 text-center">Salary (GBP)</th>
-                    <th class="col-md-3 text-center">Teaching Excellence</th>
+                    <th class="col-md-3 text-center">Expected Salary (GBP)</th>
+                    <th class="col-md-3 text-center">Satisfied Students</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -81,10 +81,10 @@
                     {%for c in all_courses %}
                         <tr>
                             <td class="col-md-3 text-center"><a href="/course/{{inst.UKPRN}}/{{c.KISCOURSEID}}">{{c.TITLE}}</a></br></td>
-                            <td class="col-md-3 text-center">{{c.graduation_rate_percent}}</br></td>
-                            <td class="col-md-3 text-center">{{c.employment_rate_percent}}</br></td>
+                            <td class="col-md-3 text-center">{{c.graduation_rate_percent}} %</br></td>
+                            <td class="col-md-3 text-center">{{c.employment_rate_percent}} %</br></td>
                             <td class="col-md-3 text-center">{{c.median_salary}}</br></td>
-                            <td class="col-md-3 text-center">{{c.nss.0.Q27}}</br></td>
+                            <td class="col-md-3 text-center">{{c.nss.0.Q27}}%</br></td>
                         </tr>
                     {%endfor%}  
                 </tbody>
