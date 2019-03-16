@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"rankit.institutions"},{"v":2,"key":{"_fts":"text","_ftsx":1},"name":"$**_text","ns":"rankit.institutions","weights":{"$**":1},"default_language":"english","language_override":"language","textIndexVersion":3}],"uuid":"127bc5e68211492dafd7bf8d29859292"}
