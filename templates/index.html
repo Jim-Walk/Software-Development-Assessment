@@ -88,7 +88,7 @@
           <label id="sliderval3"></label>        
       </div>
       <div class="form-group col-md-3">
-          <label>Teaching excellence</label>
+          <label>Student Satisfaction</label>
           <input name='teaching' type="range" min="1" max="100" value="50" class="slider" id="teachingExcellenceRange">
           <label id="sliderval4"></label>        
       </div>
@@ -165,9 +165,9 @@
                 "<td class='col-md-1 text-center'>"+rank+"</td>"+
                 "<td class='col-md-3 text-center'>"+"<a href='/institution/"+UKPRN+"'>"+PROVIDER_NAME+"</a></td>"+
                 "<td class='col-md-1 text-center'>"+grad_rate+"</td>"+
-                "<td class='col-md-1 text-center'>"+empl_rate+" %</td>"+
+                "<td class='col-md-1 text-center'>"+empl_rate+"</td>"+
                 "<td class='col-md-1 text-center'>"+salary+"</td>"+
-                "<td class='col-md-1 text-center'>"+studfeed+" %</td>"+
+                "<td class='col-md-1 text-center'>"+studfeed+"</td>"+
                 "<td class='col-md-1 text-center'>"+points+"</td>"+
                 "</tr>";          
       return html;  
@@ -187,22 +187,32 @@
                   var table_rows = "";
                   for(let i = 0; i < json.length; i++){
                     if(typeof json[i].PROVIDER_NAME !== 'undefined'){
+                      
                       var s_grad = json[i].s_grad+'%';
                       var s_sal = 'GBP '+json[i].s_sal;
+                      var s_empl = json[i].s_empl+'%';
+                      var s_feed = json[i].s_feed+'%';
+
                       if(json[i].s_grad == null || json[i].s_grad == 'No data available.'){
                         var s_grad = 'No data available'; 
                       }
                       if(json[i].s_sal == null){
                         var s_sal = 'No data available'; 
                       }
+                      if(json[i].s_empl == null){
+                        var s_empl = 'No data available'; 
+                      }
+                      if(json[i].s_feed == null){
+                        var s_feed = 'No data available'; 
+                      }
                       table_rows = table_rows + new_row(
                                                 /*rank*/  i+1, 
                                                           json[i].PROVIDER_NAME, 
                                                           json[i].UKPRN,
-                                                                s_grad,
-                                                          json[i].s_empl,
-                                                                   s_sal,
-                                                          json[i].s_feed,
+                                                                 s_grad,
+                                                                 s_empl,
+                                                                  s_sal,
+                                                                 s_feed,
                                                           json[i].points
                                           /*grad rates*/ /* Math.floor(json[i].graduation_rate_percent), */
                                               /*salary*/  /*Math.floor(json[i].employment_rate_percent)*/
