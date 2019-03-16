@@ -219,7 +219,5 @@ class RankClass(object):
 			institution['s_feed'] = round(numpy.mean(feedl),0)
 			if institution['s_feed'] <= 0:
 				institution['s_feed'] = "No data available."
-
-			print(institution['s_grad'])
 			ranked_prns.append(institution) #append the final "leaderboard" to the list, index of the list determining the index
 		return ranked_prns
