@@ -18,7 +18,7 @@ For use with python3. Install necessary packages in either the website or the cr
 
 After you've installed mongodb and you're sure it's up and running, simply import the data using the import script.
 ```
-cd db/ && mongorestore && cd ..
+cd db/ && unzip dump.zip && mongorestore && cd ..
 ```
 
 We have also included the import script we used for the original import. We have modified it so that you can specify how many records are included. We recommend importing at least 20000 records. Please note that this method is much slower than using `mongorestore`
