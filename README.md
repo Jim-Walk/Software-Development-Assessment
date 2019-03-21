@@ -12,7 +12,10 @@ sudo apt install python3 python3-pip mongodb-server
 ```
 
 
-For use with python3. Install necessary packages in either the website or the crawler folder with `pip install website/requirements.txt`
+For use with python3. Install necessary python packages with 
+```
+pip install website/requirements.txt
+```
 
 ## Quick Start
 
